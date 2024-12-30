@@ -1,6 +1,9 @@
 import "dotenv/config";
 import { drizzle } from "drizzle-orm/libsql";
+import { createClient } from "@libsql/client";
 
-export const db = drizzle({
-  connection: { url: process.env.DATABASE_URL! },
+const client = createClient({
+  url: process.env.DATABASE_URL!,
 });
+
+export const db = drizzle(client);

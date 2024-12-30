@@ -14,6 +14,7 @@ export default function Calendar() {
     const calendar = f7.calendar.create({
       containerEl: "#calendar",
       locale: "ro-RO",
+      // cssClass: "dark",
     });
   });
 

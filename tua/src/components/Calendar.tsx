@@ -1,6 +1,9 @@
 import { onMount } from "solid-js";
-import Framework7 from "framework7/lite-bundle";
+import Framework7 from "framework7/lite";
+import F7Calendar from "framework7/components/calendar";
 import "framework7/css/bundle";
+
+Framework7.use([F7Calendar]);
 
 export default function Calendar() {
   const f7 = new Framework7({
@@ -10,6 +13,7 @@ export default function Calendar() {
   onMount(() => {
     const calendar = f7.calendar.create({
       containerEl: "#calendar",
+      locale: "ro-RO",
     });
   });
 

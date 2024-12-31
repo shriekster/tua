@@ -3,6 +3,7 @@ import { Router } from "@solidjs/router";
 import { FileRoutes } from "@solidjs/start/router";
 import { Suspense } from "solid-js";
 import { ColorModeProvider, ColorModeScript } from "@kobalte/core";
+import CustomTitle from "./components/CustomTitle";
 import "./app.css";
 
 export default function App() {
@@ -10,9 +11,9 @@ export default function App() {
     <Router
       root={(props) => (
         <MetaProvider>
-          <Title>SolidStart - Basic</Title>
-          <a href="/">Index</a>
-          <a href="/about">About</a>
+          <CustomTitle />
+          {/* <a href="/">Index</a>
+          <a href="/about">About</a> */}
           <Suspense>
             <ColorModeScript />
             <ColorModeProvider initialColorMode="light">

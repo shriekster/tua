@@ -1,4 +1,4 @@
-import { createForm, required, email, minLength } from "@modular-forms/solid";
+import { createForm, required, minLength, value } from "@modular-forms/solid";
 
 import { ImageRoot, ImageFallback, Image } from "@/components/ui/image";
 import {
@@ -7,38 +7,38 @@ import {
   TextFieldRoot,
   TextFieldErrorMessage,
 } from "@/components/ui/textfield";
+import { Button } from "@/components/ui/button";
 
 type LoginForm = {
-  email: string;
+  username: string;
   password: string;
 };
 
 export default function Login() {
   const [loginForm, { Form, Field }] = createForm<LoginForm>();
   return (
-    <main>
-      <Form>
-        <ImageRoot>
+    <main class="h-svh w-svw flex">
+      <Form class="h-[64dvh] max-h-[512px] w-[300px] m-auto flex flex-col justify-between">
+        <ImageRoot fallbackDelay={500}>
           <Image src="/tua.webp" class="w-[300px]" />
           <ImageFallback>TUA</ImageFallback>
         </ImageRoot>
         <Field
-          name="email"
+          name="username"
           validate={[
-            required("Please enter your email."),
-            email("The email address is badly formatted."),
+            required("Introdu numele de utilizator"),
+            minLength(3, "Numele este prea scurt!"),
           ]}
         >
           {(field, props) => (
             <TextFieldRoot
-              class="w-full max-w-xs"
+              class="w-full max-w-xs !h-[64px]"
               validationState={field.error ? "invalid" : "valid"}
             >
-              <TextFieldLabel>Email</TextFieldLabel>
               <TextField
                 {...props}
-                type="email"
-                placeholder="Email"
+                type="text"
+                placeholder="Utilizator"
                 on:input={(e) => {
                   console.debug(e.target.value);
                 }}
@@ -49,7 +49,35 @@ export default function Login() {
             </TextFieldRoot>
           )}
         </Field>
-        <button type="submit">Login</button>
+        <Field
+          name="password"
+          validate={[
+            required("Introdu parola"),
+            minLength(3, "Parola este prea scurtă!"),
+          ]}
+        >
+          {(field, props) => (
+            <TextFieldRoot
+              class="w-full max-w-xs !h-[64px]"
+              validationState={field.error ? "invalid" : "valid"}
+            >
+              <TextField
+                {...props}
+                type="text"
+                placeholder="Parolă"
+                on:input={(e) => {
+                  console.debug(e.target.value);
+                }}
+              />
+              <TextFieldErrorMessage forceMount={true} class="text-opacity-0">
+                {field.error}
+              </TextFieldErrorMessage>
+            </TextFieldRoot>
+          )}
+        </Field>
+        <Button class="bg-[#7f805d]" type="submit">
+          Login
+        </Button>
       </Form>
     </main>
   );

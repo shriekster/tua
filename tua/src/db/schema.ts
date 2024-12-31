@@ -67,7 +67,7 @@ export const timeRanges = sqliteTable(
     endTime: text("end_time").notNull(),
     availableSeats: integer("available_seats").default(20),
     bookedSeats: integer("booked_seats").default(0),
-    published: integer("published", { mode: "boolean" }),
+    published: integer("published", { mode: "boolean" }).default(false),
     dateId: integer("date_id").references(() => dates.id, {
       onDelete: "restrict",
     }),

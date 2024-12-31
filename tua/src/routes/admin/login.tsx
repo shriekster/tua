@@ -1,6 +1,7 @@
 import { createForm, required, minLength, value } from "@modular-forms/solid";
 
 import { ImageRoot, ImageFallback, Image } from "@/components/ui/image";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   TextField,
   TextFieldLabel,
@@ -19,9 +20,11 @@ export default function Login() {
   return (
     <main class="h-svh w-svw flex">
       <Form class="h-[64dvh] max-h-[512px] w-[300px] m-auto flex flex-col justify-between">
-        <ImageRoot fallbackDelay={500}>
-          <Image src="/tua.webp" class="w-[300px]" />
-          <ImageFallback>TUA</ImageFallback>
+        <ImageRoot>
+          <Image src="/tua.webp" class="w-[300px]" alt="TUA" />
+          <ImageFallback class="h-[128px] w-[300px] !rounded-none">
+            <Skeleton class="bg-[#7f805d] h-full w-full" />
+          </ImageFallback>
         </ImageRoot>
         <Field
           name="username"
@@ -75,7 +78,10 @@ export default function Login() {
             </TextFieldRoot>
           )}
         </Field>
-        <Button class="bg-[#7f805d]" type="submit">
+        <Button
+          class="bg-[#7f805d] border-[#7f805d] transition-colors hover:border-[#7f805d] hover:border-[1px] hover:bg-transparent hover:text-[#7f805d]"
+          type="submit"
+        >
           Login
         </Button>
       </Form>

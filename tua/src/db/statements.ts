@@ -9,6 +9,7 @@ export const addUser = db
     password: sql.placeholder("password"),
     displayName: sql.placeholder("displayName"),
     phoneNumber: sql.placeholder("phoneNumber"),
+    isPublicContact: sql.placeholder("isPublicContact"),
   })
   .returning()
   .prepare();

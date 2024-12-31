@@ -1,4 +1,3 @@
-import { sql } from "drizzle-orm";
 import {
   integer,
   sqliteTable,
@@ -16,6 +15,9 @@ export const users = sqliteTable(
     password: text("password").notNull(),
     displayName: text("display_name").notNull(),
     phoneNumber: text("phone_number").notNull(),
+    isPublicContact: integer("is_public_contact", { mode: "boolean" }).default(
+      false
+    ),
   },
   (table) => [
     uniqueIndex("unique_index:users:user_name").on(table.userName),

@@ -16,7 +16,9 @@ import {
 import { Button } from "@/components/ui/button";
 import { FaRegularEyeSlash } from "solid-icons/fa";
 import { FaRegularEye } from "solid-icons/fa";
-import { createSignal } from "solid-js";
+import { HiOutlineEye } from "solid-icons/hi";
+import { HiOutlineEyeSlash } from "solid-icons/hi";
+import { createSignal, createEffect } from "solid-js";
 
 type LoginForm = {
   username: string;
@@ -25,17 +27,28 @@ type LoginForm = {
 
 export default function Login() {
   const [showPassword, setShowPassword] = createSignal(false);
+  const [showPasswordVisibilityButton, setShowPasswordVisibilityButton] =
+    createSignal(false);
 
   const [loginForm, { Form, Field }] = createForm<LoginForm>();
 
   let passwordInputRef: HTMLInputElement;
 
-  const togglePasswordVisibility = () => {
-    setShowPassword((prevShowPassword) => !prevShowPassword);
+  const onPasswordVisibilityMouseDown = (e: MouseEvent) => {
+    e.preventDefault();
+  };
 
-    if (passwordInputRef) {
-      passwordInputRef.focus();
-    }
+  const onPasswordVisibilityButtonClick = (e: MouseEvent) => {
+    setShowPassword((prevShowPassword) => !prevShowPassword);
+  };
+
+  const onPasswordInputBlur = () => {
+    setShowPasswordVisibilityButton(false);
+    setShowPassword(false);
+  };
+
+  const onPasswordInputFocus = () => {
+    setShowPasswordVisibilityButton(true);
   };
 
   const handleSubmit: SubmitHandler<LoginForm> = (values, event) => {
@@ -67,7 +80,8 @@ export default function Login() {
         >
           {(field, props) => (
             <TextFieldRoot
-              class="w-full max-w-xs !h-[64px]"
+              class="w-full max-w-xs !h-[64px] autofill:border-green-500 autofill:shadow-[inset_0_0_0px_1000px_rgba(34,197,94,0.1)]
+  autofill:transition-[background-color] autofill:delay-0 autofill:ease-in-out"
               validationState={field.error ? "invalid" : "valid"}
               value={field.value || ""}
             >
@@ -76,6 +90,7 @@ export default function Login() {
                 class="h-[48px]"
                 type="text"
                 placeholder="Utilizator"
+                autoComplete="username"
               />
               <TextFieldErrorMessage>
                 {field.error ?? " "}
@@ -87,7 +102,7 @@ export default function Login() {
           name="password"
           validate={[
             required("Introdu parola"),
-            minLength(3, "Parola este prea scurtă!"),
+            minLength(8, "Parola este prea scurtă!"),
           ]}
         >
           {(field, props) => (
@@ -102,25 +117,33 @@ export default function Login() {
                   class="h-[48px]"
                   type={showPassword() ? "text" : "password"}
                   placeholder="Parolă"
+                  onFocus={onPasswordInputFocus}
+                  onBlur={onPasswordInputBlur}
+                  autoComplete="current-password"
                   ref={(element: HTMLInputElement) =>
                     (passwordInputRef = element)
                   }
                 />
+
                 <TextFieldErrorMessage forceMount={true} class="text-opacity-0">
                   {field.error}
                 </TextFieldErrorMessage>
               </TextFieldRoot>
-              <Button
-                type="button"
-                class="rounded-full bg-transparent p-2 hover:bg-white hover:bg-opacity-15 absolute right-[6px] top-[6px]"
-                onClick={togglePasswordVisibility}
-              >
-                {showPassword() ? (
-                  <FaRegularEyeSlash color="white" size={20} />
-                ) : (
-                  <FaRegularEye color="white" size={20} />
-                )}
-              </Button>
+              {showPasswordVisibilityButton() && (
+                <Button
+                  tabIndex={-1}
+                  type="button"
+                  class="rounded-full bg-transparent p-2 hover:bg-white hover:bg-opacity-15 absolute right-[6px] top-[6px]"
+                  onMouseDown={onPasswordVisibilityMouseDown}
+                  onClick={onPasswordVisibilityButtonClick}
+                >
+                  {showPassword() ? (
+                    <HiOutlineEyeSlash color="white" size={20} />
+                  ) : (
+                    <HiOutlineEye color="white" size={20} />
+                  )}
+                </Button>
+              )}
             </div>
           )}
         </Field>

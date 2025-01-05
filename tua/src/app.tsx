@@ -1,4 +1,4 @@
-import { MetaProvider, Title } from "@solidjs/meta";
+import { MetaProvider } from "@solidjs/meta";
 import { Router } from "@solidjs/router";
 import { FileRoutes } from "@solidjs/start/router";
 import { Suspense } from "solid-js";
@@ -12,13 +12,9 @@ export default function App() {
       root={(props) => (
         <MetaProvider>
           <CustomTitle />
-          {/* <a href="/">Index</a>
-          <a href="/about">About</a> */}
           <Suspense>
-            <ColorModeScript />
-            <ColorModeProvider initialColorMode="light">
-              {props.children}
-            </ColorModeProvider>
+            <ColorModeScript initialColorMode="dark" />
+            <ColorModeProvider>{props.children}</ColorModeProvider>
           </Suspense>
         </MetaProvider>
       )}

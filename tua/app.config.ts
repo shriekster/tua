@@ -6,6 +6,11 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 export default defineConfig({
+  server: {
+    prerender: {
+      crawlLinks: true,
+    },
+  },
   vite: {
     resolve: {
       alias: {

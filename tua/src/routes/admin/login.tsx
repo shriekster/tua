@@ -80,8 +80,7 @@ export default function Login() {
         >
           {(field, props) => (
             <TextFieldRoot
-              class="w-full max-w-xs !h-[64px] autofill:border-green-500 autofill:shadow-[inset_0_0_0px_1000px_rgba(34,197,94,0.1)]
-  autofill:transition-[background-color] autofill:delay-0 autofill:ease-in-out"
+              class="w-full max-w-xs !h-[64px]"
               validationState={field.error ? "invalid" : "valid"}
               value={field.value || ""}
             >

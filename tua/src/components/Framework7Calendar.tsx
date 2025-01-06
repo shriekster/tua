@@ -45,7 +45,7 @@ export default function Framework7Calendar() {
     calendar.prevMonth(250);
   };
 
-  const handleClickTodayButton = (e: MouseEvent) => {
+  const handleClickTodayButton = () => {
     const month = today.getMonth();
     const year = today.getFullYear();
 
@@ -70,6 +70,8 @@ export default function Framework7Calendar() {
       cssClass: "dark max-w-[340px]",
       value: currentDate(),
       toolbar: false,
+      weekHeader: true,
+      // minDate: today,
       events: [
         {
           date: new Date(year, month, day),
@@ -110,9 +112,16 @@ export default function Framework7Calendar() {
       on: {
         monthYearChangeStart: handleMonthYearChangeStart,
         change: handleCalendarValueChange,
-        // dayClick: handleDayClick,
       },
     });
+  });
+
+  onMount(() => {
+    const eventSource = new EventSource("http://localhost:3000/api/events");
+
+    eventSource.onmessage = (event: MessageEvent) => {
+      console.debug(event.data);
+    };
   });
 
   return (

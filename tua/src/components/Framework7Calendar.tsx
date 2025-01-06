@@ -3,27 +3,12 @@ import Framework7 from "framework7/lite";
 import Calendar, {
   Calendar as CalendarNamespace,
 } from "framework7/components/calendar";
-
 import { Button } from "@/components/ui/button";
+import { monthNames } from "@/constants/calendar";
 
 import "framework7/css/bundle";
 
 Framework7.use([Calendar]);
-
-const monthNames = [
-  "Ianuarie",
-  "Februarie",
-  "Martie",
-  "Aprilie",
-  "Mai",
-  "Iunie",
-  "Iulie",
-  "August",
-  "Septembrie",
-  "Octombrie",
-  "Noiembrie",
-  "Decembrie",
-];
 
 export default function Framework7Calendar() {
   const today = new Date();

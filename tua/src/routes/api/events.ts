@@ -13,9 +13,11 @@ export async function GET(event: APIEvent) {
 
   registerSession(session);
 
+  let counter = 0;
   setInterval(() => {
     if (session.isConnected) {
-      session.push("test");
+      session.push(counter);
+      counter++;
     }
   }, 1000);
 

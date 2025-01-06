@@ -1,14 +1,24 @@
-import { createSignal, createEffect, onMount } from "solid-js";
+import {
+  createSignal,
+  createEffect,
+  createComputed,
+  onMount,
+  createMemo,
+} from "solid-js";
 import Framework7 from "framework7/lite";
 import Calendar, {
   Calendar as CalendarNamespace,
 } from "framework7/components/calendar";
 import { Button } from "@/components/ui/button";
+import CustomLoader from "@/components/CustomLoader";
+import { delay } from "@/libs/utils";
 import { monthNames } from "@/constants/calendar";
 
 import "framework7/css/bundle";
 
 Framework7.use([Calendar]);
+
+type Events = Array<CalendarNamespace.DateRangeItem & { color: string }>;
 
 export default function Framework7Calendar() {
   const today = new Date();
@@ -16,6 +26,8 @@ export default function Framework7Calendar() {
   const [currentDate, setCurrentDate] = createSignal([today]);
   const [currentMonth, setCurrentMonth] = createSignal(today.getMonth());
   const [currentYear, setCurrentYear] = createSignal(today.getFullYear());
+  const [events, setEvents] = createSignal([] as Events);
+  const [loading, setLoading] = createSignal(true);
 
   const framework7App = new Framework7({
     el: "#framework7-app",
@@ -60,10 +72,6 @@ export default function Framework7Calendar() {
   };
 
   onMount(() => {
-    const year = today.getFullYear();
-    const month = today.getMonth();
-    const day = today.getDate();
-
     calendar = framework7App.calendar.create({
       containerEl: "#calendar",
       locale: "ro-RO",
@@ -72,43 +80,7 @@ export default function Framework7Calendar() {
       toolbar: false,
       weekHeader: true,
       // minDate: today,
-      events: [
-        {
-          date: new Date(year, month, day),
-          hours: 12,
-          minutes: 30,
-          title: "Meeting with Vladimir",
-          color: "#dc2626",
-        },
-        // {
-        //   date: new Date(year, month, day),
-        //   hours: 18,
-        //   minutes: 0,
-        //   title: "Shopping",
-        //   color: "#4caf50",
-        // },
-        // {
-        //   date: new Date(year, month, day),
-        //   hours: 21,
-        //   minutes: 0,
-        //   title: "Gym",
-        //   color: "#e91e63",
-        // },
-        {
-          date: new Date(year, month, day + 1),
-          hours: 16,
-          minutes: 0,
-          title: "Pay loan",
-          color: "#16a34a",
-        },
-        // {
-        //   date: new Date(year, month, day + 2),
-        //   hours: 21,
-        //   minutes: 0,
-        //   title: "Gym",
-        //   color: "#ff9800",
-        // },
-      ],
+      events: events(),
       on: {
         monthYearChangeStart: handleMonthYearChangeStart,
         change: handleCalendarValueChange,
@@ -116,42 +88,94 @@ export default function Framework7Calendar() {
     });
   });
 
-  onMount(() => {
-    const eventSource = new EventSource("http://localhost:3000/api/events");
+  // @TODO: properly parse received data via SSE
+  // @TODO: properly set events state after parsing and validating data
+  onMount(async () => {
+    await delay(500);
+
+    const eventSource = new EventSource("/api/events");
+    const year = today.getFullYear();
+    const month = today.getMonth();
+    const day = today.getDate();
+
+    eventSource.onopen = () => {
+      setLoading(false);
+    };
 
     eventSource.onmessage = (event: MessageEvent) => {
-      console.debug(event.data);
+      const data = Number(event.data);
+      const newDay = day + data;
+      const date = new Date(year, month, newDay);
+      console.debug({
+        year,
+        month,
+        day,
+        newDay,
+        date: date.toLocaleDateString("ro"),
+      });
+
+      // console.debug(event.data);
+      setEvents((prevEvents) => [
+        ...prevEvents,
+        {
+          date,
+          hours: 12,
+          minutes: 30,
+          title: "Meeting with Vladimir",
+          color: "#dc2626",
+        },
+      ]);
     };
   });
 
+  createEffect(() => {
+    const newEvents = events();
+    // console.debug({ newEvents });
+    if (calendar) {
+      calendar.params.events = [...newEvents];
+
+      calendar.update();
+    }
+  });
+
   return (
-    <div id="framework7-app" class="flex flex-col items-center select-none">
-      <div class="toolbar calendar-custom-toolbar no-shadow min-w-[320px] max-w-[340px] shrink-0">
-        <div class="toolbar-inner">
-          <div class="left">
-            <a class="link icon-only" onClick={handlePreviousMonth}>
-              <i class="icon icon-back"></i>
-            </a>
-          </div>
-          <div class="center">
-            {`${monthNames[currentMonth()]} ${currentYear()}`}
-          </div>
-          <div class="right">
-            <a class="link icon-only" onClick={handleNextMonth}>
-              <i class="icon icon-forward"></i>
-            </a>
+    <div id="container" class="flex items-center justify-center relative">
+      {loading() && <CustomLoader />}
+      <div
+        id="framework7-app"
+        class={`flex flex-col items-center select-none ${
+          loading()
+            ? `opacity-25 pointer-events-none`
+            : `opacity-100 pointer-events-auto`
+        }`}
+      >
+        <div class="toolbar calendar-custom-toolbar no-shadow min-w-[320px] max-w-[340px] shrink-0">
+          <div class="toolbar-inner">
+            <div class="left">
+              <a class="link icon-only" onClick={handlePreviousMonth}>
+                <i class="icon icon-back"></i>
+              </a>
+            </div>
+            <div class="center">
+              {`${monthNames[currentMonth()]} ${currentYear()}`}
+            </div>
+            <div class="right">
+              <a class="link icon-only" onClick={handleNextMonth}>
+                <i class="icon icon-forward"></i>
+              </a>
+            </div>
           </div>
         </div>
-      </div>
-      <div id="calendar" class="max-w-[340px] w-[100%] shrink-0"></div>
-      <div class="max-w-[340px] w-[100%]">
-        <Button
-          class="no-ripple mt-[16px]"
-          variant="outline"
-          onClick={handleClickTodayButton}
-        >
-          Astăzi
-        </Button>
+        <div id="calendar" class="max-w-[340px] w-[100%] shrink-0"></div>
+        <div class="max-w-[340px] w-[100%]">
+          <Button
+            class="no-ripple mt-[16px]"
+            variant="outline"
+            onClick={handleClickTodayButton}
+          >
+            Astăzi
+          </Button>
+        </div>
       </div>
     </div>
   );

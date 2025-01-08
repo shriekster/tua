@@ -81,6 +81,9 @@ module.exports = {
         "collapsible-up": "collapsible-up 0.2s ease-out",
         "caret-blink": "caret-blink 1.25s ease-out infinite",
       },
+      fontFamily: {
+        sans: ["Roboto Mono"],
+      },
     },
   },
   plugins: [require("tailwindcss-animate")],

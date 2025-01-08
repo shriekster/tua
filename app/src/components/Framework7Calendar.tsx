@@ -9,6 +9,7 @@ import Framework7 from "framework7/lite";
 import Calendar, {
   Calendar as CalendarNamespace,
 } from "framework7/components/calendar";
+import type { Events } from "@/types/calendar";
 import { Button } from "@/components/ui/button";
 import CustomLoader from "@/components/CustomLoader";
 import { delay } from "@/libs/utils";
@@ -17,8 +18,6 @@ import { monthNames } from "@/constants/calendar";
 import "framework7/css/bundle";
 
 Framework7.use([Calendar]);
-
-type Events = Array<CalendarNamespace.DateRangeItem & { color: string }>;
 
 export default function Framework7Calendar() {
   const today = new Date();
@@ -93,14 +92,21 @@ export default function Framework7Calendar() {
   onMount(async () => {
     await delay(500);
 
-    const eventSource = new EventSource("/api/events");
+    const eventSource = new EventSource("/api/events", {
+      withCredentials: true,
+    });
     const year = today.getFullYear();
     const month = today.getMonth();
     const day = today.getDate();
 
-    eventSource.onopen = () => {
+    eventSource.onopen = (e) => {
+      console.debug("OPEN", e.timeStamp, e.type);
       setLoading(false);
     };
+
+    eventSource.addEventListener("counter", (e) => {
+      console.debug(e.data);
+    });
 
     eventSource.onmessage = (event: MessageEvent) => {
       const data = Number(event.data);
@@ -139,7 +145,10 @@ export default function Framework7Calendar() {
   });
 
   return (
-    <div id="container" class="flex items-center justify-center relative">
+    <div
+      id="container"
+      class="flex items-center justify-center relative font-sans"
+    >
       {loading() && <CustomLoader />}
       <div
         id="framework7-app"
@@ -149,7 +158,7 @@ export default function Framework7Calendar() {
             : `opacity-100 pointer-events-auto`
         }`}
       >
-        <div class="toolbar calendar-custom-toolbar no-shadow min-w-[320px] max-w-[340px] shrink-0">
+        <div class="toolbar calendar-custom-toolbar min-w-[320px] max-w-[340px] shrink-0">
           <div class="toolbar-inner">
             <div class="left">
               <a class="link icon-only" onClick={handlePreviousMonth}>
@@ -169,7 +178,7 @@ export default function Framework7Calendar() {
         <div id="calendar" class="max-w-[340px] w-[100%] shrink-0"></div>
         <div class="max-w-[340px] w-[100%]">
           <Button
-            class="no-ripple mt-[16px]"
+            class="no-ripple mt-[16px] font-medium"
             variant="outline"
             onClick={handleClickTodayButton}
           >

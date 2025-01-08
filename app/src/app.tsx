@@ -5,6 +5,7 @@ import { Suspense } from "solid-js";
 import { ColorModeProvider, ColorModeScript } from "@kobalte/core";
 import CustomTitle from "./components/CustomTitle";
 import "./app.css";
+import "./custom.css";
 
 export default function App() {
   return (

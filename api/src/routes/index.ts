@@ -1,7 +1,7 @@
-var express = require("express");
-var router = express.Router();
+import express from "express";
+import { createSession } from "better-sse";
 
-const { createSession } = require("better-sse");
+const router = express.Router();
 
 /* GET home page. */
 router.get("/", async function (req, res, next) {
@@ -16,4 +16,4 @@ router.get("/", async function (req, res, next) {
   }, 1000);
 });
 
-module.exports = router;
+export default router;

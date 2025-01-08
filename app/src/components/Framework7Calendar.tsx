@@ -32,6 +32,9 @@ export default function Framework7Calendar() {
     el: "#framework7-app",
     darkMode: true,
     theme: "md",
+    colors: {
+      primary: "#030712",
+    },
   });
 
   let calendar: CalendarNamespace.Calendar;
@@ -74,7 +77,7 @@ export default function Framework7Calendar() {
     calendar = framework7App.calendar.create({
       containerEl: "#calendar",
       locale: "ro-RO",
-      cssClass: "dark max-w-[340px]",
+      cssClass: "max-w-[340px]",
       value: currentDate(),
       toolbar: false,
       weekHeader: true,
@@ -147,7 +150,7 @@ export default function Framework7Calendar() {
   return (
     <div
       id="container"
-      class="flex items-center justify-center relative font-sans"
+      class="flex items-center justify-center relative font-sans bg-gray-950"
     >
       {loading() && <CustomLoader />}
       <div

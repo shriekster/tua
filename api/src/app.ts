@@ -14,3 +14,5 @@ app.use(cookieParser());
 app.use("/api/events", indexRouter);
 
 export default app;
+
+// @TODO: add logging (pino)

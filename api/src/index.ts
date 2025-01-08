@@ -1,46 +1,32 @@
 #!/usr/bin/env node
 
-/**
- * Module dependencies.
- */
 import "dotenv/config";
-import app from "./app.js";
-import http from "http";
-
-/**
- * Get port from environment and store in Express.
- */
+import app from "./app";
+import * as http from "node:http";
 
 const port = process.env.PORT || 3001;
 app.set("port", port);
-
-/**
- * Create HTTP server.
- */
 
 const server = http.createServer(app);
 
 /**
  * Listen on provided port, on all network interfaces.
  */
-
 server.listen(port);
-server.on("error", onError);
+// server.on("error", onError);
 server.on("listening", onListening);
 
 /**
  * Event listener for HTTP server "error" event.
  */
-
-function onError(error) {
-  if (error.syscall !== "listen") {
+function onError(error: unknown) {
+  if ((error as any).syscall !== "listen") {
     throw error;
   }
 
   const bind = typeof port === "string" ? "Pipe " + port : "Port " + port;
 
-  // handle specific listen errors with friendly messages
-  switch (error.code) {
+  switch ((error as any).code) {
     case "EACCES":
       console.error(bind + " requires elevated privileges");
       process.exit(1);
@@ -57,8 +43,16 @@ function onError(error) {
 /**
  * Event listener for HTTP server "listening" event.
  */
-
 function onListening() {
-  const addr = server.address();
-  const bind = typeof addr === "string" ? "pipe " + addr : "port " + addr?.port;
+  const address = server.address();
+
+  const addressString =
+    typeof address === "object"
+      ? `${address?.address} ${address?.port}`
+      : address.toString();
+
+  console.debug(`Listening on ${addressString}`);
 }
+
+// @TODO: graceful shutdown
+// @TODO: error event listener

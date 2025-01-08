@@ -1,5 +1,6 @@
+// import { db } from "@/db";
 import { db } from "@/db";
-import { users } from "./schema";
+import { users } from "@/db/schema";
 import { eq, sql, and } from "drizzle-orm";
 
 export const addUser = db

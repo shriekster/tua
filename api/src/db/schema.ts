@@ -6,6 +6,7 @@ import {
   index,
   real,
 } from "drizzle-orm/sqlite-core";
+import { InferSelectModel } from "drizzle-orm";
 
 export const users = sqliteTable(
   "users",
@@ -177,3 +178,6 @@ export const notifications = sqliteTable(
     ),
   ]
 );
+
+export type User = InferSelectModel<typeof users>;
+// @TODO: export the rest of the types

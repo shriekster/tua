@@ -1,5 +1,5 @@
 import { createChannel } from "better-sse";
-import type { Session, DefaultSessionState } from "better-sse";
+import type { Session } from "better-sse";
 
 const channel = createChannel();
 

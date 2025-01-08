@@ -5,7 +5,7 @@ import { registerSession, deregisterSession } from "@/libs/sse";
 export async function GET(event: APIEvent) {
   console.debug({ cookies: event.request.headers.get("Cookie") });
 
-  event.response.headers.append("Set-Cookie", "test=TEST");
+  // event.response.headers.append("Set-Cookie", "test=TEST");
   const session = await createSession(
     event.nativeEvent.node.req,
     event.nativeEvent.node.res,

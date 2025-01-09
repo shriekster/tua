@@ -21,16 +21,15 @@ const handleServerError = (error: Error) => {
 const handleProcessSignal = (signal: NodeJS.Signals) => {
   console.log(`\nReceived ${signal}, closing server...`);
 
-  server.close((error) => {
-    if (error) {
-      console.error(error);
+  try {
+    server.closeAllConnections();
+  } catch (error) {
+    console.error("🚨", error);
+    process.exit(1);
+  }
 
-      process.exit(1);
-    }
-
-    console.log("Bye 👋");
-    process.exit(0);
-  });
+  console.log("Bye 👋");
+  process.exit(0);
 };
 
 ["SIGTSTP", "SIGINT", "SIGTERM"].map((signal) => {

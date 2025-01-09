@@ -2,8 +2,9 @@ import express from "express";
 
 import eventsRouter from "./events";
 
-const router = express.Router();
+// API router
+const apiRouter = express.Router();
 
-router.use("/events", eventsRouter);
+apiRouter.use("/events", eventsRouter);
 
-export default router;
+export default apiRouter;

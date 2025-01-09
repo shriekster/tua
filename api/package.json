@@ -12,6 +12,8 @@
   "dependencies": {
     "@libsql/client": "^0.14.0",
     "@node-rs/argon2": "^2.0.2",
+    "@oslojs/crypto": "^1.0.1",
+    "@oslojs/encoding": "^1.1.0",
     "better-sse": "^0.14.1",
     "cookie-parser": "~1.4.4",
     "debug": "~4.4.0",
@@ -20,7 +22,8 @@
     "express": "~5.0.1",
     "morgan": "~1.10.0",
     "pino": "^9.6.0",
-    "pino-http": "^10.3.0"
+    "pino-http": "^10.3.0",
+    "ulidx": "^2.4.1"
   },
   "devDependencies": {
     "@swc/cli": "^0.6.0",

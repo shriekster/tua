@@ -1,10 +1,8 @@
 import express from "express";
 import cookieParser from "cookie-parser";
 import { httpLogger } from "./middleware/logger";
-
-import apiRouter from "./routes";
-
 import "dotenv/config";
+import apiRouter from "./routes";
 
 const app = express();
 
@@ -18,3 +16,5 @@ app.use(cookieParser());
 app.use("/api", apiRouter);
 
 export default app;
+
+// TODO: add middlewares like cors and helmet

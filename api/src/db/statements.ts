@@ -1,7 +1,7 @@
 // import { db } from "@/db";
 import { db } from "@/db";
-import { users } from "@/db/schema";
-import { eq, sql, and } from "drizzle-orm";
+import { users, sessions } from "@/db/schema";
+import { eq, sql, and, Placeholder } from "drizzle-orm";
 
 export const addUser = db
   .insert(users)
@@ -43,4 +43,37 @@ export const queryUser = db
       eq(users.password, sql.placeholder("password"))
     )
   )
+  .prepare();
+
+export const addSession = db
+  .insert(sessions)
+  .values({
+    id: sql.placeholder("id"),
+    userId: sql.placeholder("userId"),
+    expiresAt: sql.placeholder("expiresAt"),
+  })
+  .returning()
+  .prepare();
+
+export const querySessionForUser = db
+  .select({ user: users, session: sessions })
+  .from(sessions)
+  .innerJoin(users, eq(sessions.userId, users.id))
+  .where(eq(sessions.id, sql.placeholder("sessionId")))
+  .prepare();
+
+// @TODO: fix this statement
+export const updateSession = db
+  .update(sessions)
+  .set({
+    expiresAt: sql.placeholder("expiresAt"),
+  })
+  .where(eq(sessions.id, sql.placeholder("sessionId")))
+  .returning()
+  .prepare();
+
+export const deleteSession = db
+  .delete(sessions)
+  .where(eq(sessions.id, sql.placeholder("sessionId")))
+  .returning()
   .prepare();

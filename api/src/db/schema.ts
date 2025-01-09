@@ -6,7 +6,7 @@ import {
   index,
   real,
 } from "drizzle-orm/sqlite-core";
-import { InferSelectModel } from "drizzle-orm";
+import { InferSelectModel, sql } from "drizzle-orm";
 
 export const users = sqliteTable(
   "users",
@@ -19,11 +19,29 @@ export const users = sqliteTable(
     isPublicContact: integer("is_public_contact", { mode: "boolean" }).default(
       false
     ),
+    createdAt: integer("created_at", { mode: "timestamp" }).default(
+      sql`(current_timestamp, 'localtime')`
+    ),
+    updatedAt: integer("updated_at", { mode: "timestamp" }),
   },
   (table) => [
     uniqueIndex("unique_index:users:user_name").on(table.userName),
     uniqueIndex("unique_index:users:phone_number").on(table.phoneNumber),
   ]
+);
+
+export const sessions = sqliteTable(
+  "sessions",
+  {
+    id: text("id").primaryKey(),
+    userId: integer("user_id")
+      .notNull()
+      .references(() => users.id),
+    expiresAt: integer("expires_at", {
+      mode: "timestamp",
+    }).notNull(),
+  },
+  (table) => [index("index:sessions:user_id").on(table.userId)]
 );
 
 export const personnelCategories = sqliteTable(
@@ -179,5 +197,26 @@ export const notifications = sqliteTable(
   ]
 );
 
+export const settings = sqliteTable(
+  "settings",
+  {
+    key: text("key").notNull(),
+    value: text("value"),
+  },
+  (table) => [uniqueIndex("unique_index:settings:key").on(table.key)]
+);
+
 export type User = InferSelectModel<typeof users>;
-// @TODO: export the rest of the types
+export type Session = InferSelectModel<typeof sessions>;
+export type PersonnelCategory = InferSelectModel<typeof personnelCategories>;
+export type Location = InferSelectModel<typeof locations>;
+export type Date = InferSelectModel<typeof dates>;
+export type TimeRange = InferSelectModel<typeof timeRanges>;
+export type PhoneNumber = InferSelectModel<typeof phoneNumbers>;
+export type Appointment = InferSelectModel<typeof appointments>;
+export type Participant = InferSelectModel<typeof participants>;
+export type AppointmentParticipant = InferSelectModel<
+  typeof appointmentParticipants
+>;
+export type Notification = InferSelectModel<typeof notifications>;
+export type Setting = InferSelectModel<typeof settings>;

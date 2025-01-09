@@ -11,7 +11,7 @@ const handleServerListening = () => {
       ? `${address?.address}->${address?.port}`
       : address.toString();
 
-  console.log(`API server listening on ${addressString}`);
+  console.log(`TUA API server listening on ${addressString}`);
 };
 
 const handleServerError = (error: Error) => {

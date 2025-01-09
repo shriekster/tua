@@ -1,7 +1,8 @@
 import express from "express";
 import cookieParser from "cookie-parser";
 import { httpLogger } from "./middleware/logger";
-import indexRouter from "./routes/index";
+
+import apiRouter from "./routes";
 
 import "dotenv/config";
 
@@ -14,6 +15,6 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 // Routing
-app.use("/api/events", indexRouter);
+app.use("/api", apiRouter);
 
 export default app;

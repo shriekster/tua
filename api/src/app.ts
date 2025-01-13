@@ -1,16 +1,25 @@
 import express from "express";
+import helmet from "helmet";
 import cookieParser from "cookie-parser";
 import { httpLogger } from "./middleware/logger";
-import cors from "@/middleware/cors";
-// import "dotenv/config";
+import { validateOrigin } from "./middleware/validation/origin";
 
 import apiRouter from "./routes";
 
 const app = express();
 
+app.disable("x-powered-by");
+
 // Middleware
 app.use(httpLogger);
-app.use(cors);
+app.use(
+  helmet({
+    strictTransportSecurity: false,
+    xPoweredBy: false,
+  })
+);
+app.use(validateOrigin);
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -19,5 +28,3 @@ app.use(cookieParser());
 app.use("/api", apiRouter);
 
 export default app;
-
-// TODO: add middlewares like cors and helmet

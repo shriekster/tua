@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import http from "node:http";
 import "dotenv/config";
+import { runMigrations, seed } from "./db/migrate";
 import app from "./app";
 
 const handleServerListening = () => {
@@ -38,6 +39,9 @@ const handleProcessSignal = (signal: NodeJS.Signals) => {
 
 const port = process.env.PORT || 3001;
 app.set("port", port);
+
+await runMigrations();
+await seed();
 
 const server = http.createServer(app);
 server.listen(port);

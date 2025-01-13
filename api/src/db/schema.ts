@@ -20,7 +20,8 @@ export const users = sqliteTable(
       false
     ),
     createdAt: integer("created_at", { mode: "timestamp" }).default(
-      sql`(current_timestamp, 'localtime')`
+      // sql`datetime(current_timestamp, 'localtime')`
+      sql`CURRENT_TIMESTAMP`
     ),
     updatedAt: integer("updated_at", { mode: "timestamp" }),
   },

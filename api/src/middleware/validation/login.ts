@@ -11,7 +11,6 @@ export const validateLogin = (
   if (result.success) {
     next();
   } else {
-    console.error(result.issues);
     res.status(400).json({
       message: "Missing or invalid username / password",
     });

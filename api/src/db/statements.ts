@@ -1,7 +1,6 @@
-// import { db } from "@/db";
 import { db } from "@/db";
 import { users, sessions } from "@/db/schema";
-import { eq, sql, and, Placeholder } from "drizzle-orm";
+import { eq, sql, and } from "drizzle-orm";
 
 export const addUser = db
   .insert(users)
@@ -37,12 +36,7 @@ export const updateUserPassword = db
 export const queryUser = db
   .select()
   .from(users)
-  .where(
-    and(
-      eq(users.userName, sql.placeholder("userName")),
-      eq(users.password, sql.placeholder("password"))
-    )
-  )
+  .where(eq(users.userName, sql.placeholder("userName")))
   .prepare();
 
 export const addSession = db

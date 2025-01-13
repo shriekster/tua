@@ -9,6 +9,11 @@ export const env = createEnv({
     SESSION_DURATION: z.number({ coerce: true }),
     SMS_TO_API_KEY: z.string(),
 
+    ADMIN_USERNAME: z.string(),
+    ADMIN_PASSWORD: z.string(),
+    ADMIN_DISPLAY_NAME: z.string(),
+    ADMIN_PHONE_NUMBER: z.string(),
+
     NODE_ENV: z.union([z.literal("production"), z.literal("development")]),
   },
   runtimeEnv: process.env,

@@ -19,6 +19,7 @@ import { FaRegularEye } from "solid-icons/fa";
 import { HiOutlineEye } from "solid-icons/hi";
 import { HiOutlineEyeSlash } from "solid-icons/hi";
 import { createSignal, createEffect } from "solid-js";
+import { delay } from "@/libs/utils";
 
 type LoginForm = {
   username: string;
@@ -31,8 +32,6 @@ export default function Login() {
     createSignal(false);
 
   const [loginForm, { Form, Field }] = createForm<LoginForm>();
-
-  let passwordInputRef: HTMLInputElement;
 
   const onPasswordVisibilityMouseDown = (e: MouseEvent) => {
     e.preventDefault();
@@ -51,16 +50,17 @@ export default function Login() {
     setShowPasswordVisibilityButton(true);
   };
 
-  const handleSubmit: SubmitHandler<LoginForm> = (values, event) => {
+  const handleSubmit: SubmitHandler<LoginForm> = async (values, event) => {
     event.preventDefault();
-
+    await delay(5000);
     console.debug({ values });
   };
 
   return (
     <main class="h-svh w-svw flex">
       <Form
-        class="h-[64dvh] max-h-[512px] w-[300px] m-auto flex flex-col justify-between"
+        inert={loginForm.submitting}
+        class="h-[64dvh] max-h-[512px] w-[300px] m-auto flex flex-col justify-between inert:opacity-50"
         onSubmit={handleSubmit}
       >
         <ImageRoot>
@@ -119,9 +119,6 @@ export default function Login() {
                   onFocus={onPasswordInputFocus}
                   onBlur={onPasswordInputBlur}
                   autoComplete="current-password"
-                  ref={(element: HTMLInputElement) =>
-                    (passwordInputRef = element)
-                  }
                 />
 
                 <TextFieldErrorMessage forceMount={true} class="text-opacity-0">

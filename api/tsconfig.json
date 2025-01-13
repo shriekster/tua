@@ -9,9 +9,10 @@
     "skipLibCheck": true,
     "allowSyntheticDefaultImports": true,
     "allowImportingTsExtensions": true,
+    "esModuleInterop": true,
     "noEmit": true,
     "outDir": "./dist",
-    "rootDir": "./src",
+    "rootDir": ".",
     "baseUrl": "./",
     "paths": {
       "@/*": ["./src/*"]

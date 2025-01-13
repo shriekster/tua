@@ -62,11 +62,10 @@ export const querySessionForUser = db
   .where(eq(sessions.id, sql.placeholder("sessionId")))
   .prepare();
 
-// @TODO: fix this statement
 export const updateSession = db
   .update(sessions)
   .set({
-    expiresAt: sql.placeholder("expiresAt"),
+    expiresAt: sql`${sql.placeholder("expiresAt")}`,
   })
   .where(eq(sessions.id, sql.placeholder("sessionId")))
   .returning()

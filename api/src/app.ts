@@ -1,7 +1,8 @@
 import express from "express";
 import cookieParser from "cookie-parser";
 import { httpLogger } from "./middleware/logger";
-import "dotenv/config";
+// import "dotenv/config";
+
 import apiRouter from "./routes";
 
 const app = express();

@@ -19,6 +19,6 @@
     },
     "lib": ["ESNext"]
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "src/env.ts"],
   "exclude": ["node_modules", "dist"]
 }

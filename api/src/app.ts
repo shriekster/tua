@@ -1,6 +1,7 @@
 import express from "express";
 import cookieParser from "cookie-parser";
 import { httpLogger } from "./middleware/logger";
+import cors from "@/middleware/cors";
 // import "dotenv/config";
 
 import apiRouter from "./routes";
@@ -9,6 +10,7 @@ const app = express();
 
 // Middleware
 app.use(httpLogger);
+app.use(cors);
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());

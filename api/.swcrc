@@ -8,6 +8,9 @@
       "decorators": false
     },
     "baseUrl": "./",
+    "paths": {
+      "@/*": ["./src/*"]
+    },
     "target": "esnext",
     "loose": false,
     "externalHelpers": false,

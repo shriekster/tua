@@ -1,3 +1,4 @@
+import { createSignal, createEffect } from "solid-js";
 import {
   createForm,
   required,
@@ -5,8 +6,10 @@ import {
   SubmitHandler,
 } from "@modular-forms/solid";
 
-import { ImageRoot, ImageFallback, Image } from "@/components/ui/image";
+import { HiOutlineEye } from "solid-icons/hi";
+import { HiOutlineEyeSlash } from "solid-icons/hi";
 
+import { ImageRoot, ImageFallback, Image } from "@/components/ui/image";
 import {
   TextField,
   TextFieldLabel,
@@ -14,11 +17,9 @@ import {
   TextFieldErrorMessage,
 } from "@/components/ui/textfield";
 import { Button } from "@/components/ui/button";
-import { FaRegularEyeSlash } from "solid-icons/fa";
-import { FaRegularEye } from "solid-icons/fa";
-import { HiOutlineEye } from "solid-icons/hi";
-import { HiOutlineEyeSlash } from "solid-icons/hi";
-import { createSignal, createEffect } from "solid-js";
+import CustomLoader from "@/components/CustomLoader";
+
+import { cn } from "@/libs/cn";
 import { delay } from "@/libs/utils";
 
 type LoginForm = {
@@ -52,15 +53,31 @@ export default function Login() {
 
   const handleSubmit: SubmitHandler<LoginForm> = async (values, event) => {
     event.preventDefault();
-    await delay(5000);
-    console.debug({ values });
+
+    await fetch("/api/sessions", {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+      body: JSON.stringify(values),
+    });
   };
 
   return (
-    <main class="h-svh w-svw flex">
+    <main class="h-svh w-svw flex items-center justify-center relative">
+      {loginForm.submitting && <CustomLoader />}
       <Form
-        inert={loginForm.submitting}
-        class="h-[64dvh] max-h-[512px] w-[300px] m-auto flex flex-col justify-between inert:opacity-50"
+        // class={`h-[64dvh] max-h-[512px] w-[300px] m-auto flex flex-col justify-between ${
+        //   loginForm.submitting
+        //     ? "pointer-events-none opacity-50"
+        //     : "pointer-events-auto"
+        // }`}
+        class={cn(
+          "h-[64dvh] max-h-[512px] w-[300px] m-auto flex flex-col justify-between",
+          loginForm.submitting
+            ? "pointer-events-none opacity-25"
+            : "pointer-events-auto"
+        )}
         onSubmit={handleSubmit}
       >
         <ImageRoot>

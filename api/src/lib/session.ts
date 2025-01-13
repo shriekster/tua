@@ -1,7 +1,7 @@
 import { encodeHexLowerCase } from "@oslojs/encoding";
 import { sha256 } from "@oslojs/crypto/sha2";
 import { cache } from "./cache";
-import { SESSION_KEY_PREFIX, USER_SESSION_KEY_PREFIX } from "./constants";
+import { SESSION_KEY_PREFIX } from "./constants";
 import {
   addSession,
   deleteSession,
@@ -9,12 +9,10 @@ import {
   updateSession,
 } from "@/db/statements";
 import { ulid } from "./ulid";
-import type { User, Session } from "@/db/schema";
+import type { Session } from "@/db/schema";
+import { env } from "@/env";
 
-// Default session duration is 7 days
-const DEFAULT_SESSION_DURATION = Number(
-  process.env.SESSION_DURATION ?? 604800000
-);
+const { DEFAULT_SESSION_DURATION } = env;
 
 export const generateSessionToken = (): string => {
   const token = ulid().toLowerCase();
@@ -29,7 +27,7 @@ export const createSession = async (
   const [session] = await addSession.execute({
     id: sessionId,
     userId,
-    expirestAt: new Date(Date.now() + DEFAULT_SESSION_DURATION),
+    expiresAt: new Date(Date.now() + DEFAULT_SESSION_DURATION),
   });
 
   const sessionKey = `${SESSION_KEY_PREFIX}${sessionId}`;
@@ -42,41 +40,44 @@ export const validateSessionToken = async (
   token: string
 ): Promise<SessionValidationResult> => {
   const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(token)));
+  const sessionKey = `${SESSION_KEY_PREFIX}${sessionId}`;
 
-  const userSessionKey = `${USER_SESSION_KEY_PREFIX}${sessionId}`;
-
-  let userSession: SessionValidationResult | undefined | null = await cache.get(
-    userSessionKey
+  let session: SessionValidationResult | undefined | null = await cache.get(
+    sessionKey
   );
 
-  if (!userSession) {
-    userSession = await querySessionForUser.get({
-      sessionId,
-    });
+  if (!session) {
+    try {
+      const userSession = await querySessionForUser.get({
+        sessionId,
+      });
+
+      session = userSession?.session;
+
+      await cache.set(sessionKey, session);
+    } catch (error) {
+      session = null;
+    }
   }
 
-  if (!userSession) {
-    return { session: null, user: null };
+  if (!session) {
+    return null;
   }
-
-  const { user, session } = userSession;
-
-  await cache.set(userSessionKey, { session: session!, user: user! });
 
   const now = Date.now();
   const sessionExpiresAt = session!.expiresAt.getTime();
 
   if (now >= sessionExpiresAt) {
-    await cache.del(userSessionKey);
+    await cache.del(sessionKey);
 
     await deleteSession.execute({
       sessionId,
     });
 
-    return { session: null, user: null };
+    return null;
   }
 
-  if (now >= sessionExpiresAt - DEFAULT_SESSION_DURATION / 2) {
+  if (now >= sessionExpiresAt - DEFAULT_SESSION_DURATION / 3) {
     const updatedExpirationDate = new Date(now + DEFAULT_SESSION_DURATION);
 
     const [updatedSession] = await updateSession.execute({
@@ -84,24 +85,22 @@ export const validateSessionToken = async (
       expiresAt: updatedExpirationDate,
     });
 
-    await cache.set(userSessionKey, { session: updatedSession, user: user! });
+    await cache.set(sessionKey, updatedSession);
 
-    return { session: updatedSession, user: user! };
+    return updatedSession;
   }
 
-  return { session: session!, user: user! };
+  return session;
 };
 
 export const invalidateSession = async (sessionId: string): Promise<void> => {
-  const userSessionKey = `${USER_SESSION_KEY_PREFIX}${sessionId}`;
+  const sessionKey = `${SESSION_KEY_PREFIX}${sessionId}`;
 
-  await cache.del(userSessionKey);
+  await cache.del(sessionKey);
 
   await deleteSession.execute({
     sessionId,
   });
 };
 
-export type SessionValidationResult =
-  | { session: Session; user: User }
-  | { session: null; user: null };
+export type SessionValidationResult = Session | null;

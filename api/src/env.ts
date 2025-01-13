@@ -6,7 +6,7 @@ export const env = createEnv({
     PORT: z.number({ coerce: true }),
     ALLOWED_ORIGIN: z.string(),
     DATABASE_URL: z.string(),
-    SESSION_DURATION: z.number({ coerce: true }),
+    DEFAULT_SESSION_DURATION: z.number({ coerce: true }),
     SMS_TO_API_KEY: z.string(),
 
     ADMIN_USERNAME: z.string(),

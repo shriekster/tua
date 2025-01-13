@@ -26,6 +26,7 @@ export const seed = async () => {
   console.debug("Seeding database...");
 
   let seedingError;
+  let skipSeeding = false;
   try {
     const userInfo = await queryUser.get({
       userName: env.ADMIN_USERNAME,
@@ -39,6 +40,8 @@ export const seed = async () => {
         phoneNumber: env.ADMIN_PHONE_NUMBER,
         isPublicContact: true,
       });
+    } else {
+      skipSeeding = true;
     }
   } catch (error) {
     seedingError = error;
@@ -47,6 +50,10 @@ export const seed = async () => {
   if (seedingError) {
     console.error("Seeding error:\n", seedingError);
   } else {
-    console.log("Seeding finished successfully.");
+    if (!skipSeeding) {
+      console.log("Seeding finished successfully.");
+    } else {
+      console.log("Skipped seeding, database already seeded.");
+    }
   }
 };

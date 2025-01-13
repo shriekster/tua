@@ -11,6 +11,7 @@
     "allowImportingTsExtensions": true,
     "esModuleInterop": true,
     "noEmit": true,
+    // "types": ["./src/types/*.ts"],
     "outDir": "./dist",
     "rootDir": ".",
     "baseUrl": "./",
@@ -19,6 +20,6 @@
     },
     "lib": ["ESNext"]
   },
-  "include": ["src/**/*", "src/env.ts"],
+  "include": ["src/**/*", "src/env.ts", "src/types"],
   "exclude": ["node_modules", "dist"]
 }

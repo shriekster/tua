@@ -1,4 +1,5 @@
-import { createSignal, createEffect } from "solid-js";
+import { createSignal } from "solid-js";
+import { useNavigate } from "@solidjs/router";
 import {
   createForm,
   required,
@@ -32,6 +33,8 @@ export default function Login() {
   const [showPasswordVisibilityButton, setShowPasswordVisibilityButton] =
     createSignal(false);
 
+  const navigate = useNavigate();
+
   const [loginForm, { Form, Field }] = createForm<LoginForm>();
 
   const onPasswordVisibilityMouseDown = (e: MouseEvent) => {
@@ -54,13 +57,21 @@ export default function Login() {
   const handleSubmit: SubmitHandler<LoginForm> = async (values, event) => {
     event.preventDefault();
 
-    await fetch("/api/sessions", {
-      headers: {
-        "Content-Type": "application/json",
-      },
-      method: "POST",
-      body: JSON.stringify(values),
-    });
+    try {
+      const response = await fetch("/api/sessions", {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        method: "POST",
+        body: JSON.stringify(values),
+      });
+
+      if (response.ok) {
+        navigate("/admin", { replace: true });
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (

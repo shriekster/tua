@@ -1,6 +1,5 @@
-// import { db } from "@/db";
 import { db } from "@/db";
-import { users } from "@/db/schema";
+import { users, sessions } from "@/db/schema";
 import { eq, sql, and } from "drizzle-orm";
 
 export const addUser = db
@@ -37,10 +36,37 @@ export const updateUserPassword = db
 export const queryUser = db
   .select()
   .from(users)
-  .where(
-    and(
-      eq(users.userName, sql.placeholder("userName")),
-      eq(users.password, sql.placeholder("password"))
-    )
-  )
+  .where(eq(users.userName, sql.placeholder("userName")))
+  .prepare();
+
+export const addSession = db
+  .insert(sessions)
+  .values({
+    id: sql.placeholder("id"),
+    userId: sql.placeholder("userId"),
+    expiresAt: sql.placeholder("expiresAt"),
+  })
+  .returning()
+  .prepare();
+
+export const querySessionForUser = db
+  .select({ user: users, session: sessions })
+  .from(sessions)
+  .innerJoin(users, eq(sessions.userId, users.id))
+  .where(eq(sessions.id, sql.placeholder("sessionId")))
+  .prepare();
+
+export const updateSession = db
+  .update(sessions)
+  .set({
+    expiresAt: sql`${sql.placeholder("expiresAt")}`,
+  })
+  .where(eq(sessions.id, sql.placeholder("sessionId")))
+  .returning()
+  .prepare();
+
+export const deleteSession = db
+  .delete(sessions)
+  .where(eq(sessions.id, sql.placeholder("sessionId")))
+  .returning()
   .prepare();

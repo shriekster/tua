@@ -9,15 +9,17 @@
     "skipLibCheck": true,
     "allowSyntheticDefaultImports": true,
     "allowImportingTsExtensions": true,
+    "esModuleInterop": true,
     "noEmit": true,
+    // "types": ["./src/types/*.ts"],
     "outDir": "./dist",
-    "rootDir": "./src",
+    "rootDir": ".",
     "baseUrl": "./",
     "paths": {
       "@/*": ["./src/*"]
     },
-    "lib": ["es2022"]
+    "lib": ["ESNext"]
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "src/env.ts", "src/types"],
   "exclude": ["node_modules", "dist"]
 }

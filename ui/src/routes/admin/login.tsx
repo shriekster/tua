@@ -1,3 +1,5 @@
+import { createSignal } from "solid-js";
+import { useNavigate } from "@solidjs/router";
 import {
   createForm,
   required,
@@ -5,8 +7,10 @@ import {
   SubmitHandler,
 } from "@modular-forms/solid";
 
-import { ImageRoot, ImageFallback, Image } from "@/components/ui/image";
+import { HiOutlineEye } from "solid-icons/hi";
+import { HiOutlineEyeSlash } from "solid-icons/hi";
 
+import { ImageRoot, ImageFallback, Image } from "@/components/ui/image";
 import {
   TextField,
   TextFieldLabel,
@@ -14,11 +18,10 @@ import {
   TextFieldErrorMessage,
 } from "@/components/ui/textfield";
 import { Button } from "@/components/ui/button";
-import { FaRegularEyeSlash } from "solid-icons/fa";
-import { FaRegularEye } from "solid-icons/fa";
-import { HiOutlineEye } from "solid-icons/hi";
-import { HiOutlineEyeSlash } from "solid-icons/hi";
-import { createSignal, createEffect } from "solid-js";
+import CustomLoader from "@/components/CustomLoader";
+
+import { cn } from "@/libs/cn";
+import { delay } from "@/libs/utils";
 
 type LoginForm = {
   username: string;
@@ -30,9 +33,9 @@ export default function Login() {
   const [showPasswordVisibilityButton, setShowPasswordVisibilityButton] =
     createSignal(false);
 
-  const [loginForm, { Form, Field }] = createForm<LoginForm>();
+  const navigate = useNavigate();
 
-  let passwordInputRef: HTMLInputElement;
+  const [loginForm, { Form, Field }] = createForm<LoginForm>();
 
   const onPasswordVisibilityMouseDown = (e: MouseEvent) => {
     e.preventDefault();
@@ -51,16 +54,41 @@ export default function Login() {
     setShowPasswordVisibilityButton(true);
   };
 
-  const handleSubmit: SubmitHandler<LoginForm> = (values, event) => {
+  const handleSubmit: SubmitHandler<LoginForm> = async (values, event) => {
     event.preventDefault();
 
-    console.debug({ values });
+    try {
+      const response = await fetch("/api/sessions", {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        method: "POST",
+        body: JSON.stringify(values),
+      });
+
+      if (response.ok) {
+        navigate("/admin", { replace: true });
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
-    <main class="h-svh w-svw flex">
+    <main class="h-svh w-svw flex items-center justify-center relative">
+      {loginForm.submitting && <CustomLoader />}
       <Form
-        class="h-[64dvh] max-h-[512px] w-[300px] m-auto flex flex-col justify-between"
+        // class={`h-[64dvh] max-h-[512px] w-[300px] m-auto flex flex-col justify-between ${
+        //   loginForm.submitting
+        //     ? "pointer-events-none opacity-50"
+        //     : "pointer-events-auto"
+        // }`}
+        class={cn(
+          "h-[64dvh] max-h-[512px] w-[300px] m-auto flex flex-col justify-between",
+          loginForm.submitting
+            ? "pointer-events-none opacity-25"
+            : "pointer-events-auto"
+        )}
         onSubmit={handleSubmit}
       >
         <ImageRoot>
@@ -119,9 +147,6 @@ export default function Login() {
                   onFocus={onPasswordInputFocus}
                   onBlur={onPasswordInputBlur}
                   autoComplete="current-password"
-                  ref={(element: HTMLInputElement) =>
-                    (passwordInputRef = element)
-                  }
                 />
 
                 <TextFieldErrorMessage forceMount={true} class="text-opacity-0">

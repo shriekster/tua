@@ -4,11 +4,13 @@ import {
   createComputed,
   onMount,
   createMemo,
+  onCleanup,
 } from "solid-js";
 import Framework7 from "framework7/lite";
 import Calendar, {
   Calendar as CalendarNamespace,
 } from "framework7/components/calendar";
+import { type EventSourceController, EventSourcePlus } from "event-source-plus";
 import type { Events } from "@/types/calendar";
 import { Button } from "@/components/ui/button";
 import CustomLoader from "@/components/CustomLoader";
@@ -37,6 +39,7 @@ export default function Framework7Calendar() {
     },
   });
 
+  let controller: EventSourceController;
   let calendar: CalendarNamespace.Calendar;
 
   const handleMonthYearChangeStart = (calendar: CalendarNamespace.Calendar) => {
@@ -95,46 +98,64 @@ export default function Framework7Calendar() {
   onMount(async () => {
     await delay(500);
 
-    const eventSource = new EventSource("/api/events", {
-      withCredentials: true,
+    const eventSource = new EventSourcePlus("/api/events", {
+      // credentials: true,
+      headers: {
+        "X-Origin": window.location.origin,
+      },
+      credentials: "same-origin",
     });
     const year = today.getFullYear();
     const month = today.getMonth();
     const day = today.getDate();
 
-    eventSource.onopen = (e) => {
-      console.debug("OPEN", e.timeStamp, e.type);
-      setLoading(false);
-    };
-
-    eventSource.addEventListener("counter", (e) => {
-      console.debug(e.data);
+    controller = eventSource.listen({
+      onResponse(context) {
+        console.debug({ context });
+        setLoading(false);
+      },
+      onMessage(data) {
+        console.debug(data);
+      },
     });
 
-    eventSource.onmessage = (event: MessageEvent) => {
-      const data = Number(event.data);
-      const newDay = day + data;
-      const date = new Date(year, month, newDay);
-      console.debug({
-        year,
-        month,
-        day,
-        newDay,
-        date: date.toLocaleDateString("ro"),
-      });
+    // eventSource.onopen = (e) => {
+    //   console.debug("OPEN", e.timeStamp, e.type);
+    //   setLoading(false);
+    // };
 
-      // console.debug(event.data);
-      setEvents((prevEvents) => [
-        ...prevEvents,
-        {
-          date,
-          hours: 12,
-          minutes: 30,
-          title: "Meeting with Vladimir",
-          color: "#dc2626",
-        },
-      ]);
-    };
+    // eventSource.addEventListener("counter", (e) => {
+    //   console.debug(e.data);
+    // });
+
+    // eventSource.onmessage = (event: MessageEvent) => {
+    //   const data = Number(event.data);
+    //   const newDay = day + data;
+    //   const date = new Date(year, month, newDay);
+    //   console.debug({
+    //     year,
+    //     month,
+    //     day,
+    //     newDay,
+    //     date: date.toLocaleDateString("ro"),
+    //   });
+
+    //   // console.debug(event.data);
+    //   setEvents((prevEvents) => [
+    //     ...prevEvents,
+    //     {
+    //       date,
+    //       hours: 12,
+    //       minutes: 30,
+    //       title: "Meeting with Vladimir",
+    //       color: "#dc2626",
+    //     },
+    //   ]);
+    // };
+  });
+
+  onCleanup(() => {
+    controller.abort();
   });
 
   createEffect(() => {

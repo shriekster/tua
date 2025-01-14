@@ -71,6 +71,20 @@ CREATE TABLE `phone_numbers` (
 );
 --> statement-breakpoint
 CREATE UNIQUE INDEX `unique_index:phone_numbers:number` ON `phone_numbers` (`number`);--> statement-breakpoint
+CREATE TABLE `sessions` (
+	`id` text PRIMARY KEY NOT NULL,
+	`user_id` integer NOT NULL,
+	`expires_at` integer NOT NULL,
+	FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON UPDATE no action ON DELETE no action
+);
+--> statement-breakpoint
+CREATE INDEX `index:sessions:user_id` ON `sessions` (`user_id`);--> statement-breakpoint
+CREATE TABLE `settings` (
+	`key` text NOT NULL,
+	`value` text
+);
+--> statement-breakpoint
+CREATE UNIQUE INDEX `unique_index:settings:key` ON `settings` (`key`);--> statement-breakpoint
 CREATE TABLE `time_ranges` (
 	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
 	`start_time` text NOT NULL,
@@ -92,7 +106,9 @@ CREATE TABLE `users` (
 	`password` text NOT NULL,
 	`display_name` text NOT NULL,
 	`phone_number` text NOT NULL,
-	`is_public_contact` integer DEFAULT false
+	`is_public_contact` integer DEFAULT false,
+	`created_at` integer DEFAULT CURRENT_TIMESTAMP,
+	`updated_at` integer
 );
 --> statement-breakpoint
 CREATE UNIQUE INDEX `unique_index:users:user_name` ON `users` (`user_name`);--> statement-breakpoint

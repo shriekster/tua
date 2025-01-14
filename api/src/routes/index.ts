@@ -1,19 +1,12 @@
 import express from "express";
-import { createSession } from "better-sse";
 
-const router = express.Router();
+import eventsRouter from "./events";
+import sessionsRouter from "./sessions";
 
-/* GET home page. */
-router.get("/", async function (req, res, next) {
-  const session = await createSession(req, res);
-  let counter = 0;
+// API router
+const apiRouter = express.Router();
 
-  setInterval(() => {
-    if (session.isConnected) {
-      session.push(counter, "counter", "some-id");
-      counter++;
-    }
-  }, 1000);
-});
+apiRouter.use("/events", eventsRouter);
+apiRouter.use("/sessions", sessionsRouter);
 
-export default router;
+export default apiRouter;

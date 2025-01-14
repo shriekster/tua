@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json.schemastore.org/swcrc",
+  "jsc": {
+    "parser": {
+      "syntax": "typescript",
+      "tsx": false,
+      "dynamicImport": true,
+      "decorators": false
+    },
+    "baseUrl": "./",
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "target": "esnext",
+    "loose": false,
+    "externalHelpers": false,
+    "keepClassNames": false
+  },
+  "exclude": ["node_modules"],
+  "module": {
+    "type": "es6",
+    "strict": false,
+    "strictMode": false,
+    "noInterop": false,
+    "lazy": false,
+    "resolveFully": true
+  },
+  "isModule": true
+}
+
+// https://stackoverflow.com/a/78619147

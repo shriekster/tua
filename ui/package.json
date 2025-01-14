@@ -9,18 +9,14 @@
   },
   "dependencies": {
     "@kobalte/core": "^0.13.7",
-    "@libsql/client": "^0.14.0",
     "@modular-forms/solid": "^0.25.0",
-    "@node-rs/argon2": "^2.0.2",
     "@solidjs/meta": "^0.29.4",
     "@solidjs/router": "^0.15.0",
     "@solidjs/start": "^1.0.10",
-    "better-sse": "^0.14.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "dotenv": "^16.4.7",
-    "drizzle-orm": "^0.38.3",
     "embla-carousel-solid": "^8.5.1",
+    "event-source-plus": "^0.1.8",
     "framework7": "^8.3.4",
     "solid-icons": "^1.1.0",
     "solid-js": "^1.9.2",
@@ -36,8 +32,6 @@
   },
   "devDependencies": {
     "autoprefixer": "^10.4.20",
-    "drizzle-kit": "^0.30.1",
-    "postcss": "^8.4.49",
-    "tsx": "^4.19.2"
+    "postcss": "^8.4.49"
   }
 }

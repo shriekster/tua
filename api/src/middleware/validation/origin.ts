@@ -10,7 +10,9 @@ export const validateOrigin = (
   res.setHeader("Access-Control-Allow-Origin", env.ALLOWED_ORIGIN);
   res.setHeader("Vary", "Origin");
 
-  const result = parseOrigin(req.headers.origin);
+  const origin = req.headers.origin ?? req.headers["x-origin"];
+
+  const result = parseOrigin(origin);
 
   if (result.success && result.output === env.ALLOWED_ORIGIN) {
     next();

@@ -7,7 +7,7 @@ const router = express.Router();
 router.get("/", async function (req, res) {
   const session = await createSession(req, res);
   let counter = 0;
-
+  console.debug({ cookies: req.cookies });
   setInterval(() => {
     if (session.isConnected) {
       session.push(counter, "counter", "some-id");

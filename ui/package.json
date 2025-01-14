@@ -16,6 +16,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "embla-carousel-solid": "^8.5.1",
+    "event-source-plus": "^0.1.8",
     "framework7": "^8.3.4",
     "solid-icons": "^1.1.0",
     "solid-js": "^1.9.2",

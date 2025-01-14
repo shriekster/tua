@@ -10,6 +10,7 @@ import {
 } from "@/db/statements";
 import { ulid } from "./ulid";
 import type { Session } from "@/db/schema";
+import type { Response } from "express";
 import { env } from "@/env";
 
 const { DEFAULT_SESSION_DURATION } = env;
@@ -54,7 +55,9 @@ export const validateSessionToken = async (
 
       session = userSession?.session;
 
-      await cache.set(sessionKey, session);
+      if (session) {
+        await cache.set(sessionKey, session);
+      }
     } catch (error) {
       session = null;
     }
@@ -65,7 +68,7 @@ export const validateSessionToken = async (
   }
 
   const now = Date.now();
-  const sessionExpiresAt = session!.expiresAt.getTime();
+  const sessionExpiresAt = session.expiresAt.getTime();
 
   if (now >= sessionExpiresAt) {
     await cache.del(sessionKey);
@@ -100,6 +103,28 @@ export const invalidateSession = async (sessionId: string): Promise<void> => {
 
   await deleteSession.execute({
     sessionId,
+  });
+};
+
+export const setSessionCookie = (
+  res: Response,
+  session: Session,
+  token: string
+) => {
+  res.cookie("session", token, {
+    expires: session.expiresAt,
+    path: "/api/admin",
+    sameSite: "strict",
+    httpOnly: true,
+  });
+};
+
+export const removeSessionCookie = (res: Response) => {
+  res.cookie("session", {
+    maxAge: 0,
+    path: "/api",
+    sameSite: "strict",
+    httpOnly: true,
   });
 };
 

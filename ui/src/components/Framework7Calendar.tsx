@@ -98,7 +98,7 @@ export default function Framework7Calendar() {
   onMount(async () => {
     await delay(500);
 
-    const eventSource = new EventSourcePlus("/api/events", {
+    const eventSource = new EventSourcePlus("/api/admin/events", {
       // credentials: true,
       headers: {
         "X-Origin": window.location.origin,
@@ -156,6 +156,10 @@ export default function Framework7Calendar() {
 
   onCleanup(() => {
     controller.abort();
+  });
+
+  onCleanup(() => {
+    calendar.destroy();
   });
 
   createEffect(() => {

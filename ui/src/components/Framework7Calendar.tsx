@@ -160,6 +160,7 @@ export default function Framework7Calendar() {
 
   onCleanup(() => {
     calendar.destroy();
+    framework7App.initialized = false;
   });
 
   createEffect(() => {

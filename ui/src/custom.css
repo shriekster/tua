@@ -379,3 +379,8 @@ select:-webkit-autofill:focus {
     transform: rotate(-1turn);
   }
 }
+
+/* Ionic overrides */
+:root.md {
+  --ion-background-color: #09090b !important;
+}

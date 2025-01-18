@@ -1,18 +1,42 @@
-import { createChannel } from "better-sse";
-import type { Session } from "better-sse";
+import { createSession, createChannel } from "better-sse";
+import type { Session, Channel } from "better-sse";
+import type { Request, Response } from "express";
 
-const channel = createChannel();
+const usersChannel = createChannel();
+const adminsChannel = createChannel();
 
-const registerSession = (session: Session) => {
+export type ChannelName = "users" | "admins";
+
+const getChannel = (channelName: ChannelName) => {
+  switch (channelName) {
+    case "admins":
+      return adminsChannel;
+
+    case "users":
+      return usersChannel;
+  }
+};
+
+export const createCustomSession = async (
+  req: Request,
+  res: Response,
+  channelName: ChannelName
+): Promise<Session> => {
+  const channel = getChannel(channelName);
+  const session = await createSession(req, res);
+
   channel.register(session);
+
+  session.on("disconnected", () => {
+    channel.deregister(session);
+    session.removeAllListeners();
+  });
+
+  return session;
 };
 
-const deregisterSession = (session: Session) => {
-  channel.deregister(session);
-};
+export const broadcast = (data: unknown, channelName: ChannelName) => {
+  const channel = getChannel(channelName);
 
-const broadcast = (data: unknown) => {
   channel.broadcast(data);
 };
-
-export { registerSession, deregisterSession, broadcast };

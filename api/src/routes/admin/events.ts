@@ -4,7 +4,7 @@ import { createCustomSession } from "@/lib/sse";
 const router = express.Router();
 
 router.get("/", async function (req, res) {
-  const session = await createCustomSession(req, res, "users");
+  const session = await createCustomSession(req, res, "admins");
   let counter = 0;
   console.debug({ cookies: req.cookies });
   setInterval(() => {

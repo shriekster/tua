@@ -1,3 +1,8 @@
-import { Calendar as CalendarNamespace } from "framework7/components/calendar";
-
-export type Events = Array<CalendarNamespace.DateRangeItem & { color: string }>;
+export type IonDateTimeWorkingParts = {
+  month: number;
+  day: number;
+  year: number;
+  hour: number;
+  minute: number;
+  ampm: "am" | "pm";
+};

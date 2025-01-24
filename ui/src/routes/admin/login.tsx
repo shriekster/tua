@@ -6,27 +6,25 @@ import {
   minLength,
   SubmitHandler,
 } from "@modular-forms/solid";
-
 import { HiOutlineEye } from "solid-icons/hi";
 import { HiOutlineEyeSlash } from "solid-icons/hi";
-
 import { ImageRoot, ImageFallback, Image } from "@/components/ui/image";
 import {
   TextField,
-  TextFieldLabel,
   TextFieldRoot,
   TextFieldErrorMessage,
 } from "@/components/ui/textfield";
 import { Button } from "@/components/ui/button";
+import { toaster } from "@kobalte/core";
+import {
+  Toast,
+  ToastContent,
+  ToastDescription,
+  ToastTitle,
+} from "@/components/ui/toast";
 import CustomLoader from "@/components/CustomLoader";
-
-import { cn } from "@/libs/cn";
-import { delay } from "@/libs/utils";
-
-type LoginForm = {
-  username: string;
-  password: string;
-};
+import { login } from "@/services/admin";
+import type { Login } from "@/types/auth";
 
 export default function Login() {
   const [showPassword, setShowPassword] = createSignal(false);
@@ -35,7 +33,7 @@ export default function Login() {
 
   const navigate = useNavigate();
 
-  const [loginForm, { Form, Field }] = createForm<LoginForm>();
+  const [loginForm, { Form, Field }] = createForm<Login>();
 
   const onPasswordVisibilityMouseDown = (e: MouseEvent) => {
     e.preventDefault();
@@ -54,35 +52,41 @@ export default function Login() {
     setShowPasswordVisibilityButton(true);
   };
 
-  const handleSubmit: SubmitHandler<LoginForm> = async (values, event) => {
+  const showToast = () => {
+    console.log("should show toast");
+    toaster.show((props) => (
+      <Toast toastId={props.toastId} variant="destructive">
+        <ToastContent>
+          <ToastTitle>Ups!</ToastTitle>
+          <ToastDescription>
+            Ai greșit utilizatorul sau parola!
+          </ToastDescription>
+        </ToastContent>
+      </Toast>
+    ));
+  };
+
+  const handleSubmit: SubmitHandler<Login> = async (values, event) => {
     event.preventDefault();
 
-    try {
-      const response = await fetch("/api/sessions", {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        method: "POST",
-        body: JSON.stringify(values),
-      });
+    const isAuthenticated = await login(values);
 
-      if (response.ok) {
-        navigate("/admin", { replace: true });
-      }
-    } catch (error) {
-      console.error(error);
+    if (isAuthenticated) {
+      navigate("/admin", { replace: true });
+    } else {
+      showToast();
     }
   };
 
   return (
-    <main class="h-svh flex items-center justify-center relative">
+    <main class="h-[100dvh] content-center relative">
       {loginForm.submitting && <CustomLoader />}
       <Form
         inert={loginForm.submitting}
-        class="h-[64dvh] !min-h-[320px] max-h-[512px] w-[300px] m-auto overflow-y-auto !p-[8px]"
+        class="!h-[400px] w-[300px] m-auto flex flex-col items-center justify-between overflow-y-auto !p-[8px] transition-opacity"
         onSubmit={handleSubmit}
       >
-        <ImageRoot class="mb-[16px] !block">
+        <ImageRoot>
           <Image
             src="/tua.webp"
             class="!h-[128px] !w-[300px] shrink-0"
@@ -103,7 +107,7 @@ export default function Login() {
         >
           {(field, props) => (
             <TextFieldRoot
-              class="w-full max-w-xs !h-[64px] mb-[32px]"
+              class="w-full max-w-xs !h-[64px]"
               validationState={field.error ? "invalid" : "valid"}
               value={field.value || ""}
             >
@@ -130,7 +134,7 @@ export default function Login() {
           {(field, props) => (
             <div class="relative flex w-full max-w-xs !h-[72px]">
               <TextFieldRoot
-                class="w-full max-w-xs !h-[72px] absolute bottom-0 left-0 mb-[32px]"
+                class="w-full max-w-xs !h-[72px] absolute bottom-0 left-0"
                 validationState={field.error ? "invalid" : "valid"}
                 value={field.value || ""}
               >
@@ -167,7 +171,7 @@ export default function Login() {
           )}
         </Field>
         <Button
-          class="bg-[#7f805d] border-[#7f805d] transition-colors hover:border-[#7f805d] hover:border-[1px] hover:bg-transparent hover:text-[#7f805d]"
+          class="bg-[#7f805d] border-[#7f805d] transition-colors hover:border-[#7f805d] hover:border-[1px] hover:bg-transparent hover:text-[#7f805d] w-full"
           type="submit"
         >
           Login

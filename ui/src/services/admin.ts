@@ -12,7 +12,24 @@ export const login = async (credentials: Login) => {
 
     return response.ok;
   } catch (error) {
-    console.error(error);
+    console.error("🚨", error);
+    return false;
+  }
+};
+
+export const logout = async () => {
+  try {
+    const response = await fetch("/api/sessions/current", {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      method: "DELETE",
+      credentials: "same-origin",
+    });
+
+    return response.ok;
+  } catch (error) {
+    console.error("🚨", error);
     return false;
   }
 };

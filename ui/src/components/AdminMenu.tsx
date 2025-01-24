@@ -19,6 +19,7 @@ import { FaSolidStarOfLife } from "solid-icons/fa";
 import TuaIcon from "./TuaIcon";
 import AdminMenuIcon from "@/components/AdminMenuIcon";
 import type { View } from "@/types/view";
+import { logout } from "@/services/admin";
 
 export default function AdminMenu() {
   const [isMenuOpen, setMenuOpen] = createSignal(false);
@@ -29,11 +30,16 @@ export default function AdminMenu() {
     setMenuOpen(isOpen);
   };
 
-  const handleLogout = () => {
-    console.log("Bye");
-    navigate("/admin/login", {
-      replace: true,
-    });
+  // TODO: finish
+  const handleLogout = async () => {
+    const isUnauthenticated = await logout();
+
+    if (isUnauthenticated) {
+      console.log("Bye 👋");
+      navigate("/admin/login", {
+        replace: true,
+      });
+    }
   };
 
   return (

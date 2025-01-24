@@ -1,4 +1,4 @@
-import { lazy, Switch, Match, onMount } from "solid-js";
+import { lazy, Switch, Match, onMount, createEffect } from "solid-js";
 import { useSearchParams } from "@solidjs/router";
 import AdminMenu from "@/components/AdminMenu";
 import Calendar from "@/components/Calendar";
@@ -9,13 +9,7 @@ const Settings = lazy(() => import("@/components/Settings"));
 const Locations = lazy(() => import("@/components/Locations"));
 
 export default function Admin() {
-  const [searchParams, setSearchParams] = useSearchParams<View>();
-
-  // onMount(() => {
-  //   if (!searchParams.view) {
-  //     setSearchParams({ view: "calendar" });
-  //   }
-  // });
+  const [searchParams] = useSearchParams<View>();
 
   return (
     <main class="dark">
@@ -35,7 +29,7 @@ export default function Admin() {
           <Settings />
         </Match>
         {/* Default */}
-        <Match when={searchParams.view == undefined}>
+        <Match when={!!searchParams.view === false}>
           <Calendar />
         </Match>
       </Switch>

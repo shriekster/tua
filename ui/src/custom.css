@@ -384,3 +384,16 @@ select:-webkit-autofill:focus {
 :root.md {
   --ion-background-color: #09090b !important;
 }
+
+ion-datetime::part(month-year-button) {
+  pointer-events: none;
+}
+
+/* Visually indicate inert elements */
+[inert],
+[inert] * {
+  opacity: 0.5;
+  pointer-events: none;
+  cursor: default;
+  user-select: none;
+}

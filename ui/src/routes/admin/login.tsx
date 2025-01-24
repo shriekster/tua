@@ -75,25 +75,20 @@ export default function Login() {
   };
 
   return (
-    <main class="h-svh w-svw flex items-center justify-center relative">
+    <main class="h-svh flex items-center justify-center relative">
       {loginForm.submitting && <CustomLoader />}
       <Form
-        // class={`h-[64dvh] max-h-[512px] w-[300px] m-auto flex flex-col justify-between ${
-        //   loginForm.submitting
-        //     ? "pointer-events-none opacity-50"
-        //     : "pointer-events-auto"
-        // }`}
-        class={cn(
-          "h-[64dvh] max-h-[512px] w-[300px] m-auto flex flex-col justify-between",
-          loginForm.submitting
-            ? "pointer-events-none opacity-25"
-            : "pointer-events-auto"
-        )}
+        inert={loginForm.submitting}
+        class="h-[64dvh] !min-h-[320px] max-h-[512px] w-[300px] m-auto overflow-y-auto !p-[8px]"
         onSubmit={handleSubmit}
       >
-        <ImageRoot>
-          <Image src="/tua.webp" class="w-[300px]" alt="TUA" />
-          <ImageFallback class="h-[128px] w-[300px] !rounded-none !bg-transparent">
+        <ImageRoot class="mb-[16px] !block">
+          <Image
+            src="/tua.webp"
+            class="!h-[128px] !w-[300px] shrink-0"
+            alt="TUA"
+          />
+          <ImageFallback class="!h-[128px] !w-[300px] !rounded-none !bg-transparent">
             <div class="text-[#7f805d] text-[72px] text-center h-full w-full">
               TUA
             </div>
@@ -108,7 +103,7 @@ export default function Login() {
         >
           {(field, props) => (
             <TextFieldRoot
-              class="w-full max-w-xs !h-[64px]"
+              class="w-full max-w-xs !h-[64px] mb-[32px]"
               validationState={field.error ? "invalid" : "valid"}
               value={field.value || ""}
             >
@@ -135,7 +130,7 @@ export default function Login() {
           {(field, props) => (
             <div class="relative flex w-full max-w-xs !h-[72px]">
               <TextFieldRoot
-                class="w-full max-w-xs !h-[72px] absolute bottom-0 left-0 "
+                class="w-full max-w-xs !h-[72px] absolute bottom-0 left-0 mb-[32px]"
                 validationState={field.error ? "invalid" : "valid"}
                 value={field.value || ""}
               >

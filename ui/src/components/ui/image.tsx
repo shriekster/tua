@@ -13,7 +13,7 @@ type imageRootProps<T extends ValidComponent = "span"> = ImageRootProps<T> & {
   class?: string;
 };
 
-export const ImageRoot = <T extends ValidComponent = "span">(
+export const ImageRoot = <T extends ValidComponent = "div">(
   props: PolymorphicProps<T, imageRootProps<T>>
 ) => {
   const [local, rest] = splitProps(props as imageRootProps, ["class"]);

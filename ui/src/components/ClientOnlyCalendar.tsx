@@ -57,6 +57,23 @@ const SwipeableCalendar = () => {
     ]);
   });
 
+  onMount(() => {
+    const timeoutId = setTimeout(() => {
+      clearTimeout(timeoutId);
+
+      const monthYearPickerButton = calendarRef.shadowRoot?.querySelector(
+        ".calendar-month-year-toggle"
+      );
+      monthYearPickerButton?.setAttribute("inert", "");
+
+      const monthYearPickerArrow =
+        calendarRef?.shadowRoot?.querySelector("ion-icon");
+      if (monthYearPickerArrow && monthYearPickerArrow?.style) {
+        monthYearPickerArrow.style.display = "none";
+      }
+    });
+  });
+
   return (
     <div class="w-full max-w-xl mx-auto">
       <IonDatetime

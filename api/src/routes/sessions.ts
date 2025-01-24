@@ -35,10 +35,10 @@ router.post("/", validateLogin, async function (req, res) {
     const elapsed = performance.now() - start;
 
     await delay(LOGIN_DURATION - elapsed);
-
-    res.status(200).json({
-      message: "Hello",
-    });
+    res.redirect("http://localhost:3000/admin");
+    // res.status(200).json({
+    //   message: "Hello",
+    // });
   }
 });
 

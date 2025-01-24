@@ -1,16 +1,11 @@
-import { useSearchParams } from "@solidjs/router";
-import { createSignal, createEffect } from "solid-js";
+import { useSearchParams, useNavigate } from "@solidjs/router";
+import { createSignal } from "solid-js";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
-  DropdownMenuGroupLabel,
   DropdownMenuItem,
   DropdownMenuSeparator,
-  DropdownMenuShortcut,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import type { DropdownMenuSubTriggerProps } from "@kobalte/core/dropdown-menu";
@@ -22,16 +17,23 @@ import { TbSettings } from "solid-icons/tb";
 import { TbLogout } from "solid-icons/tb";
 import { FaSolidStarOfLife } from "solid-icons/fa";
 import TuaIcon from "./TuaIcon";
-import clsx from "clsx";
 import AdminMenuIcon from "@/components/AdminMenuIcon";
 import type { View } from "@/types/view";
 
 export default function AdminMenu() {
   const [isMenuOpen, setMenuOpen] = createSignal(false);
   const [searchParams, setSearchParams] = useSearchParams<View>();
+  const navigate = useNavigate();
 
   const handleOpenChange = (isOpen: boolean) => {
     setMenuOpen(isOpen);
+  };
+
+  const handleLogout = () => {
+    console.log("Bye");
+    navigate("/admin/login", {
+      replace: true,
+    });
   };
 
   return (
@@ -61,7 +63,7 @@ export default function AdminMenu() {
             >
               <BsCalendar3 class="mr-2" size={20} />
               <span>Calendar</span>
-              {(searchParams.view == undefined ||
+              {(!!searchParams.view === false ||
                 searchParams.view === "calendar") && (
                 <FaSolidStarOfLife size={16} class="absolute right-1" />
               )}
@@ -104,7 +106,7 @@ export default function AdminMenu() {
             </DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
-          <DropdownMenuItem class="text-red-500">
+          <DropdownMenuItem onClick={handleLogout} class="text-red-500">
             <TbLogout class="mr-2" size={20} />
             <span>Deconectare</span>
           </DropdownMenuItem>

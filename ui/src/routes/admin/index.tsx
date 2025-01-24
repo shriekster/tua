@@ -16,7 +16,12 @@ export default function Admin() {
       <AdminMenu />
 
       <Switch fallback={<div>Not Found</div>}>
-        <Match when={searchParams.view === "calendar"}>
+        {/* Default */}
+        <Match
+          when={
+            !!searchParams.view === false || searchParams.view === "calendar"
+          }
+        >
           <Calendar />
         </Match>
         <Match when={searchParams.view === "profile"}>
@@ -27,10 +32,6 @@ export default function Admin() {
         </Match>
         <Match when={searchParams.view === "settings"}>
           <Settings />
-        </Match>
-        {/* Default */}
-        <Match when={!!searchParams.view === false}>
-          <Calendar />
         </Match>
       </Switch>
     </main>

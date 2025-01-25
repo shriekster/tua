@@ -1,9 +1,9 @@
 import express from "express";
 
-import userEventsRouter from "./events";
-import sessionsRouter from "./sessions";
+import userEventsRouter from "./events.route";
+import sessionsRouter from "./sessions.route";
 
-import adminEventsRouter from "./admin/events";
+import adminEventsRouter from "./admin/admin-events.route";
 
 // API router
 const apiRouter = express.Router();

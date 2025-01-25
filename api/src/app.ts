@@ -1,7 +1,7 @@
 import express from "express";
 import helmet from "helmet";
 import cookieParser from "cookie-parser";
-import { httpLogger } from "./middleware/logger";
+import { logger } from "./middleware/logger.middleware";
 import { validateOrigin } from "./middleware/validation/origin";
 
 import apiRouter from "./routes";
@@ -11,7 +11,7 @@ const app = express();
 app.disable("x-powered-by");
 
 // Middleware
-app.use(httpLogger);
+app.use(logger);
 app.use(
   helmet({
     strictTransportSecurity: false,

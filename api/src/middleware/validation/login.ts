@@ -1,6 +1,7 @@
 import { parseLoginData } from "@/lib/validation/login";
 import type { Request, Response, NextFunction } from "express";
 
+// TODO: use zod
 export const validateLogin = (
   req: Request,
   res: Response,

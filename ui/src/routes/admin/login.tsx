@@ -53,7 +53,6 @@ export default function Login() {
   };
 
   const showToast = () => {
-    console.log("should show toast");
     toaster.show((props) => (
       <Toast toastId={props.toastId} variant="destructive">
         <ToastContent>

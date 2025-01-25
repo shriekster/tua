@@ -24,7 +24,7 @@ export const logout = async () => {
         "Content-Type": "application/json",
       },
       method: "DELETE",
-      credentials: "same-origin",
+      credentials: "include",
     });
 
     return response.ok;

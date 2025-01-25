@@ -56,7 +56,7 @@ export const querySessionForUser = db
   .where(eq(sessions.id, sql.placeholder("sessionId")))
   .prepare();
 
-export const updateSession = db
+export const updateSessionExpirationDate = db
   .update(sessions)
   .set({
     expiresAt: sql`${sql.placeholder("expiresAt")}`,

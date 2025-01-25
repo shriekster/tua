@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import http from "node:http";
 import "dotenv/config";
-import { runMigrations, seed } from "./db/migrate";
+import { runMigrations, seed } from "@/services/db.service";
 import app from "./app";
 
 const handleServerListening = () => {

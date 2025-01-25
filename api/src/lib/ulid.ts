@@ -1,3 +1,5 @@
 import { monotonicFactory } from "ulidx";
 
-export const ulid = monotonicFactory();
+const ulid = monotonicFactory();
+
+export const generateId = () => ulid().toLowerCase();

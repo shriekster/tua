@@ -1,5 +1,4 @@
 import express from "express";
-import type { Response } from "express";
 import { validateLogin } from "@/middleware/validation/login";
 import { verifyCredentials } from "@/services/user.service";
 import { createSession, deleteSession } from "@/services/session.service";

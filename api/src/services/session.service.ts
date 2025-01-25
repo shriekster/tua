@@ -13,7 +13,6 @@ import {
 import { generateId } from "@/lib/ulid";
 import { encodeHex } from "@/lib/utils";
 import type { Session } from "@/db/schema";
-import type { Response } from "express";
 import { env } from "@/env";
 
 const { DEFAULT_SESSION_DURATION } = env;

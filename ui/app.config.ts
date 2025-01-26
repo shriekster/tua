@@ -9,6 +9,7 @@ export default defineConfig({
   server: {
     prerender: {
       crawlLinks: true,
+      autoSubfolderIndex: true,
     },
   },
   vite: {

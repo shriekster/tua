@@ -21,7 +21,11 @@ import AdminMenuIcon from "@/components/AdminMenuIcon";
 import type { View } from "@/types/view";
 import { logout } from "@/services/admin";
 
-export default function AdminMenu() {
+export type AdminMenuProps = {
+  onlineUsers: number;
+};
+
+export default function AdminMenu(props: AdminMenuProps) {
   const [isMenuOpen, setMenuOpen] = createSignal(false);
   const [searchParams, setSearchParams] = useSearchParams<View>();
   const navigate = useNavigate();
@@ -43,81 +47,86 @@ export default function AdminMenu() {
   };
 
   return (
-    <nav class="flex justify-between p-2 bg-zinc-900 !w-[100%]">
-      <TuaIcon />
-      <span class="font-sans font-bold text-xl">TUA</span>
-      <DropdownMenu onOpenChange={handleOpenChange} placement="bottom-end">
-        <DropdownMenuTrigger
-          as={(props: DropdownMenuSubTriggerProps) => (
-            <Button
-              {...props}
-              size="icon"
-              variant="ghost"
-              class="flex relative"
-            >
-              <AdminMenuIcon isMenuOpen={isMenuOpen()} />
-            </Button>
-          )}
-        />
-        <DropdownMenuContent class="w-56">
-          <DropdownMenuGroup>
-            <DropdownMenuItem
-              onClick={() => {
-                setSearchParams({ view: "calendar" });
-              }}
-              class="relative"
-            >
-              <BsCalendar3 class="mr-2" size={20} />
-              <span>Calendar</span>
-              {(!!searchParams.view === false ||
-                searchParams.view === "calendar") && (
-                <FaSolidStarOfLife size={16} class="absolute right-1" />
-              )}
+    <nav class="flex flex-col justify-between p-2 bg-zinc-900 !w-[100%]">
+      <div class="flex justify-between p-2 !w-[100%]">
+        <TuaIcon />
+        <span class="font-sans font-bold text-xl">TUA</span>
+        <DropdownMenu onOpenChange={handleOpenChange} placement="bottom-end">
+          <DropdownMenuTrigger
+            as={(props: DropdownMenuSubTriggerProps) => (
+              <Button
+                {...props}
+                size="icon"
+                variant="ghost"
+                class="flex relative"
+              >
+                <AdminMenuIcon isMenuOpen={isMenuOpen()} />
+              </Button>
+            )}
+          />
+          <DropdownMenuContent class="w-56">
+            <DropdownMenuGroup>
+              <DropdownMenuItem
+                onClick={() => {
+                  setSearchParams({ view: "calendar" });
+                }}
+                class="relative"
+              >
+                <BsCalendar3 class="mr-2" size={20} />
+                <span>Calendar</span>
+                {(!!searchParams.view === false ||
+                  searchParams.view === "calendar") && (
+                  <FaSolidStarOfLife size={16} class="absolute right-1" />
+                )}
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => {
+                  setSearchParams({ view: "profile" });
+                }}
+                class="relative"
+              >
+                <FaSolidUserAstronaut class="mr-2" size={20} />
+                <span>Profil</span>
+                {searchParams.view === "profile" && (
+                  <FaSolidStarOfLife size={16} class="absolute right-1" />
+                )}
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => {
+                  setSearchParams({ view: "locations" });
+                }}
+                class="relative"
+              >
+                <TiLocation class="mr-2" size={20} />
+                <span>Locații</span>
+                {searchParams.view === "locations" && (
+                  <FaSolidStarOfLife size={16} class="absolute right-1" />
+                )}
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => {
+                  setSearchParams({ view: "settings" });
+                }}
+                class="relative"
+              >
+                <TbSettings class="mr-2" size={20} />
+                <span>Setări</span>
+                {searchParams.view === "settings" && (
+                  <FaSolidStarOfLife size={16} class="absolute right-1" />
+                )}
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={handleLogout} class="text-red-500">
+              <TbLogout class="mr-2" size={20} />
+              <span>Deconectare</span>
             </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={() => {
-                setSearchParams({ view: "profile" });
-              }}
-              class="relative"
-            >
-              <FaSolidUserAstronaut class="mr-2" size={20} />
-              <span>Profil</span>
-              {searchParams.view === "profile" && (
-                <FaSolidStarOfLife size={16} class="absolute right-1" />
-              )}
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={() => {
-                setSearchParams({ view: "locations" });
-              }}
-              class="relative"
-            >
-              <TiLocation class="mr-2" size={20} />
-              <span>Locații</span>
-              {searchParams.view === "locations" && (
-                <FaSolidStarOfLife size={16} class="absolute right-1" />
-              )}
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={() => {
-                setSearchParams({ view: "settings" });
-              }}
-              class="relative"
-            >
-              <TbSettings class="mr-2" size={20} />
-              <span>Setări</span>
-              {searchParams.view === "settings" && (
-                <FaSolidStarOfLife size={16} class="absolute right-1" />
-              )}
-            </DropdownMenuItem>
-          </DropdownMenuGroup>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={handleLogout} class="text-red-500">
-            <TbLogout class="mr-2" size={20} />
-            <span>Deconectare</span>
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+      <div class="font-sans p-2 font-normal text-[12px] border-t-2">
+        Utilizatori online: {props.onlineUsers ?? 0}
+      </div>
     </nav>
   );
 }

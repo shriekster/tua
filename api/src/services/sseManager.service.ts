@@ -6,6 +6,7 @@ const usersChannel = createChannel();
 const adminsChannel = createChannel();
 
 export type ChannelName = "users" | "admins";
+export type EventName = "users";
 
 const getChannel = (channelName: ChannelName) => {
   switch (channelName) {
@@ -35,8 +36,11 @@ export const createCustomSession = async (
   return session;
 };
 
-export const broadcast = (data: unknown, channelName: ChannelName) => {
+export const broadcast = (
+  data: unknown,
+  eventName: EventName,
+  channelName: ChannelName
+) => {
   const channel = getChannel(channelName);
-
-  channel.broadcast(data);
+  channel.broadcast(data, eventName);
 };

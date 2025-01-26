@@ -2,7 +2,7 @@ import express from "express";
 import helmet from "helmet";
 import cookieParser from "cookie-parser";
 import { logger } from "./middleware/logger.middleware";
-import { validateOrigin } from "./middleware/validation/origin";
+import { validateOrigin } from "./middleware/origin.middleware";
 
 import apiRouter from "./routes";
 
@@ -18,7 +18,7 @@ app.use(
     xPoweredBy: false,
   })
 );
-// app.use(validateOrigin);
+app.use(validateOrigin);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

@@ -1,5 +1,5 @@
 import { createCache } from "cache-manager";
-import { SESSION_KEY_PREFIX } from "@/lib/constants";
+import { SESSION_KEY_PREFIX, ONLINE_USERS_KEY } from "@/lib/constants";
 import type { Session } from "@/db/schema";
 
 // Memory store by default
@@ -61,5 +61,30 @@ export const deleteCachedSession = async (sessionId?: string) => {
     return isDeleted;
   } catch (error) {
     return false;
+  }
+};
+
+export const getOnlineUsers = async () => {
+  try {
+    const onlineUsers = await cache.get<number>(ONLINE_USERS_KEY);
+    console.log({ onlineUsers });
+
+    if (onlineUsers == null) {
+      return 0;
+    }
+
+    return onlineUsers;
+  } catch (error) {
+    return 0;
+  }
+};
+
+export const setOnlineUsers = async (count: number) => {
+  try {
+    const onlineUsers = await cache.set(ONLINE_USERS_KEY, count);
+
+    return onlineUsers;
+  } catch (error) {
+    return null;
   }
 };

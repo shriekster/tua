@@ -1,7 +1,7 @@
 export default function TuaIcon() {
   return (
     <svg
-      class="w-[32px]"
+      class="w-[32px] inline"
       viewBox="0.00 0.00 822.00 676.00"
       xmlns="http://www.w3.org/2000/svg"
       version="1.2"

@@ -5,7 +5,6 @@ const router = express.Router();
 
 router.get("/", async function (req, res) {
   const session = await createCustomSession(req, res, "admins");
-  console.log("ADMIN CONNECTED");
   let counter = 0;
   console.debug({ cookies: req.cookies });
   setInterval(() => {

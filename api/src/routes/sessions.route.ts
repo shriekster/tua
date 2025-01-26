@@ -1,15 +1,16 @@
 import express from "express";
-import { validateLogin } from "@/middleware/validation/login";
 import { verifyCredentials } from "@/services/user.service";
 import { createSession, deleteSession } from "@/services/session.service";
 import { authorize } from "@/middleware/authorization.middleware";
 import { delay } from "@/lib/utils";
 import { setSessionCookie, removeSessionCookie } from "@/lib/session";
+import { validateData } from "@/middleware/validation.middleware";
+import { loginSchema } from "@/schemas/login";
 import { LOGIN_DURATION } from "@/lib/constants";
 
 const router = express.Router();
 
-router.post("/", validateLogin, async function (req, res) {
+router.post("/", validateData(loginSchema), async function (req, res) {
   const start = performance.now();
 
   const { username, password } = req.body as {

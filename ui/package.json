@@ -19,7 +19,6 @@
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
     "embla-carousel-solid": "^8.5.1",
-    "event-source-plus": "^0.1.8",
     "solid-icons": "^1.1.0",
     "solid-js": "^1.9.2",
     "tailwind-merge": "^2.6.0",

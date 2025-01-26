@@ -13,11 +13,15 @@ const Locations = lazy(() => import("@/components/Locations"));
 
 type AdminStore = {
   onlineUsers: number;
+  connected: boolean;
 };
 
 export default function Admin() {
   const [searchParams] = useSearchParams<View>();
-  const [store, setStore] = createStore<AdminStore>({ onlineUsers: 0 });
+  const [store, setStore] = createStore<AdminStore>({
+    onlineUsers: 0,
+    connected: false,
+  });
 
   let eventSource: EventSource;
   let controller: AbortController;
@@ -55,6 +59,10 @@ export default function Admin() {
       ({ eventSource, controller } = subscribe("/api/admin/events"));
       eventSource.addEventListener("open", (e) => {
         console.log("OPEN", e);
+        setStore({
+          ...store,
+          connected: true,
+        });
       });
       eventSource.addEventListener(
         "counter",
@@ -86,7 +94,7 @@ export default function Admin() {
 
   return (
     <main class="dark">
-      <AdminMenu onlineUsers={store.onlineUsers} />
+      <AdminMenu onlineUsers={store.onlineUsers} connected={store.connected} />
 
       <Switch fallback={<div>Not Found</div>}>
         {/* Default */}

@@ -18,7 +18,7 @@ app.use(
     xPoweredBy: false,
   })
 );
-app.use(validateOrigin);
+// app.use(validateOrigin);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

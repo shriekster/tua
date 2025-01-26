@@ -16,12 +16,19 @@ import { TiLocation } from "solid-icons/ti";
 import { TbSettings } from "solid-icons/tb";
 import { TbLogout } from "solid-icons/tb";
 import { FaSolidStarOfLife } from "solid-icons/fa";
+import { FaSolidUsersBetweenLines } from "solid-icons/fa";
+import { TbCloudCheck } from "solid-icons/tb";
+import { TbCloudX } from "solid-icons/tb";
+import { TbUserUp } from "solid-icons/tb";
+import { TbUserCancel } from "solid-icons/tb";
 import TuaIcon from "./TuaIcon";
 import AdminMenuIcon from "@/components/AdminMenuIcon";
 import type { View } from "@/types/view";
 import { logout } from "@/services/admin";
+import { cn } from "@/libs/cn";
 
 export type AdminMenuProps = {
+  connected: boolean;
   onlineUsers: number;
 };
 
@@ -124,8 +131,25 @@ export default function AdminMenu(props: AdminMenuProps) {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      <div class="font-sans p-2 font-normal text-[12px] border-t-2">
-        Utilizatori online: {props.onlineUsers ?? 0}
+      <div class="flex justify-between p-2 f border-t-2">
+        <div
+          class={cn(
+            "font-sans font-bold text-[16px] flex items-center justify-center gap-1",
+            props.onlineUsers > 0 ? "text-green-700" : "text-red-700"
+          )}
+        >
+          {props.onlineUsers > 0 ? (
+            <TbUserUp size={20} class="text-green-700" />
+          ) : (
+            <TbUserCancel size={20} class="text-red-700" />
+          )}
+          <span>{props.onlineUsers}</span>
+        </div>
+        {props.connected ? (
+          <TbCloudCheck size={20} class="text-green-700" />
+        ) : (
+          <TbCloudX size={20} class="text-red-700" />
+        )}
       </div>
     </nav>
   );

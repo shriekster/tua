@@ -73,7 +73,7 @@ export default function Admin() {
           signal: controller.signal,
         }
       );
-      eventSource.addEventListener("users", handleServerUsersEvent, {
+      eventSource.addEventListener("online_users", handleServerUsersEvent, {
         signal: controller.signal,
       });
       eventSource.addEventListener("error", (e) => {

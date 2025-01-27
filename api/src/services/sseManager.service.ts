@@ -1,12 +1,18 @@
 import { createSession, createChannel } from "better-sse";
 import type { Session, Channel } from "better-sse";
 import type { Request, Response } from "express";
+import { eventEmitter } from "@/services/events.service";
 
 const usersChannel = createChannel();
 const adminsChannel = createChannel();
 
 export type ChannelName = "users" | "admins";
-export type EventName = "users";
+export type EventName = "online_users";
+
+eventEmitter.on("online_users", (onlineUsers) => {
+  console.log("ONLINE USERS EVENT", onlineUsers);
+  broadcast({ onlineUsers }, "online_users", "admins");
+});
 
 const getChannel = (channelName: ChannelName) => {
   switch (channelName) {
@@ -34,6 +40,14 @@ export const createCustomSession = async (
   });
 
   return session;
+};
+
+export const getOnlineUsers = () => {
+  console.log(
+    usersChannel.sessionCount,
+    usersChannel.activeSessions?.[0]?.state
+  );
+  return usersChannel.activeSessions.length;
 };
 
 export const broadcast = (

@@ -131,20 +131,21 @@ export default function AdminMenu(props: AdminMenuProps) {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      <div class="flex justify-between p-2 f border-t-2">
+      <div class="flex justify-end gap-2 p-2 f border-t-2">
         <div
           class={cn(
             "font-sans font-bold text-[16px] flex items-center justify-center gap-1",
-            props.onlineUsers > 0 ? "text-green-700" : "text-red-700"
+            props.onlineUsers > 0 ? "text-green-700" : "text-zinc-500"
           )}
         >
           {props.onlineUsers > 0 ? (
-            <TbUserUp size={20} class="text-green-700" />
+            <TbUserUp size={20} />
           ) : (
-            <TbUserCancel size={20} class="text-red-700" />
+            <TbUserCancel size={20} />
           )}
           <span>{props.onlineUsers}</span>
         </div>
+        <div class="border-l-2"></div>
         {props.connected ? (
           <TbCloudCheck size={20} class="text-green-700" />
         ) : (

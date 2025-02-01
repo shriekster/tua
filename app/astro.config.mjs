@@ -1,16 +1,20 @@
 // @ts-check
 import { defineConfig, envField } from "astro/config";
-import node from "@astrojs/node";
+
 import solidJs from "@astrojs/solid-js";
+
+import node from "@astrojs/node";
+
 import tailwindcss from "@tailwindcss/vite";
 
-// TODO: investigate this: https://shadcn-solid.com/docs/installation/astro#update-astro-tailwind-config
 export default defineConfig({
+  integrations: [solidJs()],
+  output: "server",
+
   adapter: node({
     mode: "standalone",
   }),
-  integrations: [solidJs()],
-  output: "server",
+
   env: {
     schema: {
       PORT: envField.number({

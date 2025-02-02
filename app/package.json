@@ -9,12 +9,24 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@ark-ui/solid": "^4.10.1",
     "@astrojs/node": "^9.0.2",
     "@astrojs/solid-js": "^5.0.4",
+    "@libsql/client": "^0.14.0",
+    "@modular-forms/solid": "^0.25.0",
+    "@node-rs/argon2": "^2.0.2",
+    "@oslojs/crypto": "^1.0.1",
+    "@oslojs/encoding": "^1.1.0",
     "@tailwindcss/vite": "^4.0.3",
     "astro": "^5.2.3",
-    "flowbite": "^3.1.1",
+    "cache-manager": "^6.4.0",
+    "dotenv": "^16.4.7",
+    "drizzle-kit": "^0.30.4",
+    "drizzle-orm": "^0.39.1",
+    "solid-icons": "^1.1.0",
     "solid-js": "^1.9.4",
-    "tailwindcss": "^4.0.3"
+    "tailwindcss": "^4.0.3",
+    "ulidx": "^2.4.1",
+    "zod": "^3.24.1"
   }
 }

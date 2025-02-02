@@ -69,7 +69,7 @@ export default function LoginForm() {
             <TextField.Root class="w-full !h-[64px]" invalid={!!field.error}>
               <TextField.Input
                 {...props}
-                class="h-[48px] w-full"
+                class="h-[48px] w-full border-[1px] border-[#7f805d] rounded-sm p-0.5"
                 type="text"
                 placeholder="Utilizator"
                 autocomplete="username"
@@ -96,7 +96,7 @@ export default function LoginForm() {
               >
                 <TextField.Input
                   {...props}
-                  class="h-[48px] w-full"
+                  class="h-[48px] w-full border-[1px] border-[#7f805d] rounded-sm p-0.5"
                   type={showPassword() ? "text" : "password"}
                   placeholder="Parolă"
                   onFocus={onPasswordInputFocus}
@@ -113,14 +113,14 @@ export default function LoginForm() {
                 <button
                   tabIndex={-1}
                   type="button"
-                  class="rounded-full bg-transparent p-2 hover:bg-white hover:bg-opacity-15 absolute right-[6px] top-[6px]"
+                  class="rounded-full bg-transparent p-2 hover:bg-[#7f805d44] hover:bg-opacity-15 absolute right-[6px] top-[6px]"
                   onMouseDown={onPasswordVisibilityMouseDown}
                   onClick={onPasswordVisibilityButtonClick}
                 >
                   {showPassword() ? (
-                    <HiOutlineEyeSlash color="white" size={20} />
+                    <HiOutlineEyeSlash color="#7f805d" size={20} />
                   ) : (
-                    <HiOutlineEye color="white" size={20} />
+                    <HiOutlineEye color="#7f805d" size={20} />
                   )}
                 </button>
               )}
@@ -128,7 +128,7 @@ export default function LoginForm() {
           )}
         </Field>
         <button
-          class="bg-[#7f805d] border-[#7f805d] transition-colors hover:border-[#7f805d] hover:border-[1px] hover:bg-transparent hover:text-[#7f805d] w-full"
+          class="bg-[#7f805d] rounded-sm h-[36px] border-[#7f805d] transition-colors hover:border-[#7f805d] hover:border-[1px] hover:bg-transparent hover:text-[#7f805d] w-full"
           type="submit"
         >
           Login

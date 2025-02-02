@@ -17,6 +17,7 @@ export default function LoginForm() {
   const [showPassword, setShowPassword] = createSignal(false);
   const [showPasswordVisibilityButton, setShowPasswordVisibilityButton] =
     createSignal(false);
+  const [isSubmitting, setSubmitting] = createSignal(false);
 
   const [loginForm, { Form, Field }] = createForm<LoginData>();
 
@@ -39,21 +40,22 @@ export default function LoginForm() {
 
   const handleSubmit: SubmitHandler<LoginData> = async (values, event) => {
     event.preventDefault();
-
+    setSubmitting(true);
     const isAuthenticated = await login(values);
 
     if (isAuthenticated) {
       navigate("/admin", { history: "replace" });
     } else {
       // showToast();
+      setSubmitting(false);
     }
   };
 
   return (
     <>
-      {loginForm.submitting && <HamsterProgress />}
+      {isSubmitting() && <HamsterProgress />}
       <Form
-        inert={loginForm.submitting}
+        inert={isSubmitting()}
         class="!h-[400px] w-[300px] m-auto flex flex-col items-center justify-between overflow-y-auto !p-[8px] transition-opacity"
         onSubmit={handleSubmit}
       >

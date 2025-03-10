@@ -1,6 +1,6 @@
 import { login } from "@/services/ui/login";
 import type { LoginData } from "@/types/ui";
-import { Field as TextField } from "@ark-ui/solid/field";
+
 import {
   createForm,
   minLength,
@@ -67,67 +67,55 @@ export default function LoginForm() {
           ]}
         >
           {(field, props) => (
-            <TextField.Root class="w-full !h-[64px]" invalid={!!field.error}>
-              <TextField.Input
-                {...props}
-                class="h-[48px] w-full border-[1px] border-[#7f805d] rounded-sm p-0.5"
-                type="text"
-                placeholder="Utilizator"
-                autocomplete="username"
-                value={field.value || ""}
-              />
-              <TextField.ErrorText class="block text-red-500">
-                {field.error ?? " "}
-              </TextField.ErrorText>
-            </TextField.Root>
+            <input
+              {...props}
+              class="input input-lg w-full border-[1px] border-[#7f805d] rounded-sm p-0.5"
+              type="text"
+              placeholder="Utilizator"
+              autocomplete="username"
+              value={field.value || ""}
+            />
           )}
         </Field>
-        <Field
-          name="password"
-          validate={[
-            required("Introdu parola"),
-            minLength(8, "Parola este prea scurtă!"),
-          ]}
-        >
-          {(field, props) => (
-            <div class="relative flex w-full max-w-xs !h-[72px]">
-              <TextField.Root
-                class="w-full max-w-xs !h-[72px] absolute bottom-0 left-0"
-                invalid={!!field.error}
-              >
-                <TextField.Input
+        <div class="relative flex w-full max-w-xs">
+          <Field
+            name="password"
+            validate={[
+              required("Introdu parola"),
+              minLength(8, "Parola este prea scurtă!"),
+            ]}
+          >
+            {(field, props) => (
+              <>
+                <input
                   {...props}
-                  class="h-[48px] w-full border-[1px] border-[#7f805d] rounded-sm p-0.5"
                   type={showPassword() ? "text" : "password"}
                   placeholder="Parolă"
                   onFocus={onPasswordInputFocus}
                   onBlur={onPasswordInputBlur}
                   autocomplete="current-password"
                   value={field.value || ""}
+                  class="input input-lg  w-full max-w-xs absolute bottom-0 left-0"
                 />
-
-                <TextField.ErrorText class="block text-red-500">
-                  {field.error ?? " "}
-                </TextField.ErrorText>
-              </TextField.Root>
-              {showPasswordVisibilityButton() && (
-                <button
-                  tabIndex={-1}
-                  type="button"
-                  class="rounded-full bg-transparent p-2 hover:bg-[#7f805d44] hover:bg-opacity-15 absolute right-[6px] top-[6px]"
-                  onMouseDown={onPasswordVisibilityMouseDown}
-                  onClick={onPasswordVisibilityButtonClick}
-                >
-                  {showPassword() ? (
-                    <HiOutlineEyeSlash color="#7f805d" size={20} />
-                  ) : (
-                    <HiOutlineEye color="#7f805d" size={20} />
-                  )}
-                </button>
-              )}
-            </div>
-          )}
-        </Field>
+                {showPasswordVisibilityButton() && (
+                  <button
+                    tabIndex={-1}
+                    type="button"
+                    class="rounded-full bg-transparent p-2 hover:bg-[#7f805d44] hover:bg-opacity-15 absolute "
+                    onMouseDown={onPasswordVisibilityMouseDown}
+                    onClick={onPasswordVisibilityButtonClick}
+                  >
+                    {showPassword() ? (
+                      <HiOutlineEyeSlash color="#7f805d" size={20} />
+                    ) : (
+                      <HiOutlineEye color="#7f805d" size={20} />
+                    )}
+                  </button>
+                )}
+              </>
+            )}
+          </Field>
+        </div>
         <button
           class="bg-[#7f805d] rounded-sm h-[36px] border-[#7f805d] transition-colors hover:border-[#7f805d] hover:border-[1px] hover:bg-transparent hover:text-[#7f805d] w-full"
           type="submit"

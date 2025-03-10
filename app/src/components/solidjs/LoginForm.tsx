@@ -1,16 +1,15 @@
-import { navigate } from "astro:transitions/client";
-import { createSignal } from "solid-js";
-import {
-  createForm,
-  required,
-  minLength,
-  type SubmitHandler,
-} from "@modular-forms/solid";
-import { HiOutlineEye } from "solid-icons/hi";
-import { HiOutlineEyeSlash } from "solid-icons/hi";
-import { Field as TextField } from "@ark-ui/solid/field";
 import { login } from "@/services/ui/login";
 import type { LoginData } from "@/types/ui";
+import { Field as TextField } from "@ark-ui/solid/field";
+import {
+  createForm,
+  minLength,
+  required,
+  type SubmitHandler,
+} from "@modular-forms/solid";
+import { navigate } from "astro:transitions/client";
+import { HiOutlineEye, HiOutlineEyeSlash } from "solid-icons/hi";
+import { createSignal } from "solid-js";
 import HamsterProgress from "./HamsterProgress";
 
 export default function LoginForm() {

@@ -8,36 +8,17 @@ import {
   type SubmitHandler,
 } from "@modular-forms/solid";
 import { navigate } from "astro:transitions/client";
-import { HiOutlineEye, HiOutlineEyeSlash } from "solid-icons/hi";
 import { createSignal } from "solid-js";
 import HamsterProgress from "./HamsterProgress";
+import TextField from "./TextField";
 
 export default function LoginForm() {
-  const [showPassword, setShowPassword] = createSignal(false);
-  const [showPasswordVisibilityButton, setShowPasswordVisibilityButton] =
-    createSignal(false);
   const [isSubmitting, setSubmitting] = createSignal(false);
 
   const [loginForm, { Form, Field }] = createForm<LoginData>();
 
-  const onPasswordVisibilityMouseDown = (e: MouseEvent) => {
-    e.preventDefault();
-  };
-
-  const onPasswordVisibilityButtonClick = (e: MouseEvent) => {
-    setShowPassword((prevShowPassword) => !prevShowPassword);
-  };
-
-  const onPasswordInputBlur = () => {
-    setShowPasswordVisibilityButton(false);
-    setShowPassword(false);
-  };
-
-  const onPasswordInputFocus = () => {
-    setShowPasswordVisibilityButton(true);
-  };
-
   const handleSubmit: SubmitHandler<LoginData> = async (values, event) => {
+    console.log("SUBMITTING");
     event.preventDefault();
     setSubmitting(true);
     const isAuthenticated = await login(values);
@@ -67,55 +48,39 @@ export default function LoginForm() {
           ]}
         >
           {(field, props) => (
-            <input
+            <TextField
               {...props}
-              class="input input-lg w-full border-[1px] border-[#7f805d] rounded-sm p-0.5"
-              type="text"
+              class="w-full border-[1px] border-[#7f805d] rounded-sm p-0.5"
+              size="xl"
+              fullWidth
               placeholder="Utilizator"
               autocomplete="username"
               value={field.value || ""}
             />
           )}
         </Field>
-        <div class="relative flex w-full max-w-xs">
-          <Field
-            name="password"
-            validate={[
-              required("Introdu parola"),
-              minLength(8, "Parola este prea scurtă!"),
-            ]}
-          >
-            {(field, props) => (
-              <>
-                <input
-                  {...props}
-                  type={showPassword() ? "text" : "password"}
-                  placeholder="Parolă"
-                  onFocus={onPasswordInputFocus}
-                  onBlur={onPasswordInputBlur}
-                  autocomplete="current-password"
-                  value={field.value || ""}
-                  class="input input-lg  w-full max-w-xs absolute bottom-0 left-0"
-                />
-                {showPasswordVisibilityButton() && (
-                  <button
-                    tabIndex={-1}
-                    type="button"
-                    class="rounded-full bg-transparent p-2 hover:bg-[#7f805d44] hover:bg-opacity-15 absolute "
-                    onMouseDown={onPasswordVisibilityMouseDown}
-                    onClick={onPasswordVisibilityButtonClick}
-                  >
-                    {showPassword() ? (
-                      <HiOutlineEyeSlash color="#7f805d" size={20} />
-                    ) : (
-                      <HiOutlineEye color="#7f805d" size={20} />
-                    )}
-                  </button>
-                )}
-              </>
-            )}
-          </Field>
-        </div>
+        <Field
+          name="password"
+          validate={[
+            required("Introdu parola"),
+            minLength(8, "Parola este prea scurtă!"),
+          ]}
+        >
+          {(field, props) => (
+            <TextField
+              {...props}
+              fullWidth
+              type="password"
+              placeholder="Parolă"
+              autocomplete="current-password"
+              value={field.value || ""}
+              size="sm"
+              color="error"
+              variant="ghost"
+              class="w-full max-w-xs relative"
+            />
+          )}
+        </Field>
         <button
           class="bg-[#7f805d] rounded-sm h-[36px] border-[#7f805d] transition-colors hover:border-[#7f805d] hover:border-[1px] hover:bg-transparent hover:text-[#7f805d] w-full"
           type="submit"

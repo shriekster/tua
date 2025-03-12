@@ -1,4 +1,6 @@
-export const monthNames = [
+export const BASE_INPUT_CLASS = "input";
+
+export const MONTH_NAMES = [
   "Ianuarie",
   "Februarie",
   "Martie",

@@ -1,0 +1,15 @@
+/* Calendar events  */
+.calendar-day-event {
+  width: 24px !important;
+  height: 6px !important;
+  border-radius: 4px !important;
+}
+
+/* Ionic overrides */
+:root.md {
+  --ion-background-color: #09090b !important;
+}
+
+ion-datetime::part(month-year-button) {
+  pointer-events: none;
+}

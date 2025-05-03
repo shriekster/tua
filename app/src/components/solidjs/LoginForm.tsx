@@ -18,14 +18,16 @@ export default function LoginForm() {
   const [loginForm, { Form, Field }] = createForm<LoginData>();
 
   const handleSubmit: SubmitHandler<LoginData> = async (values, event) => {
-    console.log("SUBMITTING");
     event.preventDefault();
     setSubmitting(true);
-    const isAuthenticated = await login(values);
+    try {
+      const isAuthenticated = await login(values);
 
-    if (isAuthenticated) {
-      navigate("/admin", { history: "replace" });
-    } else {
+      if (isAuthenticated) {
+        navigate("/admin", { history: "replace" });
+      }
+    } catch (error) {
+      console.error("🚨", error);
       setSubmitting(false);
     }
   };

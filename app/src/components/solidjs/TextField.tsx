@@ -1,16 +1,19 @@
-import { BASE_INPUT_CLASS } from "@/constants/ui";
 import clsx from "clsx";
 import { HiOutlineEye, HiOutlineEyeSlash } from "solid-icons/hi";
-import { createEffect, createSignal, splitProps } from "solid-js";
-import type { JSX } from "solid-js/jsx-runtime";
+import {
+  createEffect,
+  createMemo,
+  createSignal,
+  Match,
+  Show,
+  splitProps,
+  Switch,
+} from "solid-js";
+
+const baseInputClass = "input";
 
 type TextFieldProps = {
-  variant?: "outlined" | "ghost";
-  // type?: Omit<
-  //   JSX.IntrinsicElements["input"]["type"],
-  //   "checkbox" | "radio" | "file" | "range"
-  // >;
-  type?: JSX.IntrinsicElements["input"]["type"];
+  type?: "email" | "number" | "password" | "tel" | "text" | "url";
   size?: "xs" | "sm" | "md" | "lg" | "xl";
   color?:
     | "neutral"
@@ -27,11 +30,13 @@ type TextFieldProps = {
   value: string;
   placeholder?: string;
   autocomplete?: string;
-} & Omit<JSX.IntrinsicElements["input"], "type" | "value">;
+  error?: string;
+  required?: boolean;
+  name: string;
+};
 
 const TextField = (props: TextFieldProps) => {
   const [local, inputProps] = splitProps(props, [
-    "variant",
     "type",
     "size",
     "color",
@@ -41,50 +46,62 @@ const TextField = (props: TextFieldProps) => {
     "placeholder",
     "value",
     "class",
+    "error",
+    "name",
   ]);
 
   const [showPassword, setShowPassword] = createSignal(false);
   const [showPasswordVisibilityButton, setShowPasswordVisibilityButton] =
     createSignal(false);
-  const [inputType, setInputType] = createSignal(local.type);
 
   const onPasswordVisibilityMouseDown = (e: MouseEvent) => {
     e.preventDefault();
   };
 
-  const onPasswordVisibilityButtonClick = (e: MouseEvent) => {
+  const onPasswordVisibilityButtonClick = () => {
     setShowPassword((prevShowPassword) => !prevShowPassword);
   };
 
-  const onPasswordInputBlur = () => {
-    setShowPasswordVisibilityButton(false);
-    setShowPassword(false);
-  };
+  const onBlur =
+    local.type === "password"
+      ? () => {
+          setShowPasswordVisibilityButton(false);
+          setShowPassword(false);
+        }
+      : undefined;
 
-  const onPasswordInputFocus = () => {
-    setShowPasswordVisibilityButton(true);
-  };
+  const onFocus =
+    local.type === "password"
+      ? () => {
+          setShowPasswordVisibilityButton(true);
+        }
+      : undefined;
 
-  createEffect(() => {
+  const type = createMemo(() => {
     if (local.type === "password") {
-      setInputType(showPassword() ? "text" : "password");
+      return showPassword() ? "text" : "password";
     }
+
+    return local.type ?? "text";
   });
 
-  const variantClass =
-    local.variant === "ghost" ? BASE_INPUT_CLASS + "-" + local.variant : "";
-  const sizeClass = BASE_INPUT_CLASS + "-" + local.size;
-  const colorClass = local.color ? BASE_INPUT_CLASS + "-" + local.color : "";
+  createEffect(() => {
+    console.log("error", local.error);
+  });
+
+  const sizeClass = baseInputClass + "-" + local.size;
+  const colorClass = local.color ? baseInputClass + "-" + local.color : "";
   const fullWidthClass = local.fullWidth ? "w-full" : "";
+  const containerClass = clsx("relative", local?.fullWidth && "w-full");
   const labelClass = clsx(
     "relative",
     "flex",
     "items-center",
-    local.fullWidth && "w-full"
+    "pb-[24px]",
+    local?.fullWidth && "w-full"
   );
   const inputClass = clsx(
-    BASE_INPUT_CLASS,
-    variantClass,
+    baseInputClass,
     sizeClass,
     colorClass,
     fullWidthClass,
@@ -93,36 +110,48 @@ const TextField = (props: TextFieldProps) => {
     local.class,
     "focus:outline-none"
   );
-  console.log(sizeClass, colorClass);
+
   return (
-    <label class={labelClass}>
-      <input
-        placeholder={local.placeholder}
-        autocomplete={local.autocomplete}
-        disabled={local.disabled}
-        value={local.value}
-        type={inputType()}
-        onFocus={local.type === "password" ? onPasswordInputFocus : undefined}
-        onBlur={local.type === "password" ? onPasswordInputBlur : undefined}
-        class={inputClass}
-        {...inputProps}
-      />
-      {showPasswordVisibilityButton() && (
-        <button
-          tabIndex={-1}
-          type="button"
-          class="rounded-full bg-transparent p-2 hover:bg-[#7f805d44] hover:bg-opacity-15 absolute right-0"
-          onMouseDown={onPasswordVisibilityMouseDown}
-          onClick={onPasswordVisibilityButtonClick}
-        >
-          {showPassword() ? (
-            <HiOutlineEyeSlash color="#7f805d" size={20} />
-          ) : (
-            <HiOutlineEye color="#7f805d" size={20} />
-          )}
-        </button>
-      )}
-    </label>
+    <div class={containerClass}>
+      <label class={labelClass} for={local.name}>
+        <input
+          name={local.name}
+          placeholder={local.placeholder}
+          autocomplete={local.autocomplete}
+          disabled={local.disabled}
+          value={local.value}
+          type={type()}
+          onFocus={onFocus}
+          onBlur={onBlur}
+          class={inputClass}
+          autocorrect="off"
+          {...inputProps}
+        />
+        <Show when={showPasswordVisibilityButton()}>
+          <button
+            tabIndex={-1}
+            type="button"
+            class="rounded-full bg-transparent p-2 hover:bg-[#7f805d44] hover:bg-opacity-15 absolute right-0 z-10"
+            onMouseDown={onPasswordVisibilityMouseDown}
+            onClick={onPasswordVisibilityButtonClick}
+          >
+            <Switch>
+              <Match when={showPassword()}>
+                <HiOutlineEyeSlash color="#7f805d" size={20} />
+              </Match>
+              <Match when={!showPassword()}>
+                <HiOutlineEye color="#7f805d" size={20} />
+              </Match>
+            </Switch>
+          </button>
+        </Show>
+      </label>
+      <Show when={!!local.error}>
+        <p class="absolute left-0 bottom-0 text-sm text-red-500">
+          {local.error}
+        </p>
+      </Show>
+    </div>
   );
 };
 

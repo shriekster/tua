@@ -41,7 +41,7 @@ const request = async <T>({
   baseUrl,
   path,
   body,
-  options = {},
+  options = { credentials: "same-origin" },
   defaultHeaders = {},
 }: RequestParams<T>): Promise<T> => {
   const url = buildUrl(baseUrl, path, options.query);
@@ -52,8 +52,8 @@ const request = async <T>({
       ...defaultHeaders,
       ...options.headers,
     },
-    credentials: options.credentials ?? "same-origin",
-    body: body !== undefined ? JSON.stringify(body) : undefined,
+    credentials: options.credentials,
+    body: JSON.stringify(body),
   });
   const raw = await response.text();
 

@@ -27,7 +27,7 @@ type TextFieldProps = {
   disabled?: boolean;
   fullWidth?: boolean;
   class?: string;
-  value: string;
+  value?: string;
   placeholder?: string;
   autocomplete?: string;
   error?: string;
@@ -85,12 +85,13 @@ const TextField = (props: TextFieldProps) => {
     return local.type ?? "text";
   });
 
-  createEffect(() => {
-    console.log("error", local.error);
-  });
-
   const sizeClass = baseInputClass + "-" + local.size;
-  const colorClass = local.color ? baseInputClass + "-" + local.color : "";
+  const colorClass = createMemo(
+    () =>
+      baseInputClass +
+      "-" +
+      (local?.error ? "error" : local?.color ?? "primary")
+  );
   const fullWidthClass = local.fullWidth ? "w-full" : "";
   const containerClass = clsx("relative", local?.fullWidth && "w-full");
   const labelClass = clsx(
@@ -100,15 +101,21 @@ const TextField = (props: TextFieldProps) => {
     "pb-[24px]",
     local?.fullWidth && "w-full"
   );
-  const inputClass = clsx(
-    baseInputClass,
-    sizeClass,
-    colorClass,
-    fullWidthClass,
-    "p-[8px]",
-    local.type === "password" && "pr-[40px]",
-    local.class,
-    "focus:outline-none"
+  const inputClass = createMemo(() =>
+    clsx(
+      baseInputClass,
+      sizeClass,
+      colorClass(),
+      fullWidthClass,
+      "p-[8px]",
+      local.type === "password" && "pr-[40px]",
+      local.class,
+      "focus:outline-none"
+    )
+  );
+
+  createEffect(() =>
+    console.log({ colorClass: colorClass(), inputClass: inputClass() })
   );
 
   return (
@@ -123,7 +130,7 @@ const TextField = (props: TextFieldProps) => {
           type={type()}
           onFocus={onFocus}
           onBlur={onBlur}
-          class={inputClass}
+          class={inputClass()}
           autocorrect="off"
           {...inputProps}
         />

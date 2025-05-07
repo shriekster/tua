@@ -57,12 +57,11 @@ export default function LoginForm() {
           {(field, props) => (
             <TextField
               {...props}
-              class="border-[1px] border-[#7f805d] rounded-sm p-0.5"
               size="xl"
               fullWidth
               placeholder="Utilizator"
               autocomplete="username"
-              value={field.value || ""}
+              value={field.value}
               error={field.error}
               required
             />
@@ -78,15 +77,13 @@ export default function LoginForm() {
           {(field, props) => (
             <TextField
               {...props}
-              class="border-[1px] border-[#7f805d] rounded-sm p-0.5"
               fullWidth
               type="password"
               placeholder="Parolă"
               autocomplete="current-password"
-              value={field.value || ""}
+              value={field.value}
               error={field.error}
               size="sm"
-              color="error"
               required
             />
           )}

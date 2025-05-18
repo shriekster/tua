@@ -93,12 +93,7 @@ export default function LoginForm() {
             />
           )}
         </Field>
-        <Button
-          // class="bg-[#7f805d] rounded-sm h-[36px] border-[#7f805d] transition-colors hover:border-[#7f805d] hover:border-[1px] hover:bg-transparent hover:text-[#7f805d] w-full"
-          type="submit"
-          fullWidth
-          label={content("login")}
-        />
+        <Button type="submit" fullWidth label={content("login")} />
       </Form>
     </>
   );

@@ -56,7 +56,7 @@ export default function LoginForm() {
           name="username"
           validate={[
             required("Introdu numele de utilizator"),
-            minLength(3, "Numele este prea scurt!"),
+            minLength(3, "Nume invalid!"),
           ]}
           validateOn="input"
         >
@@ -76,7 +76,7 @@ export default function LoginForm() {
           name="password"
           validate={[
             required("Introdu parola"),
-            minLength(8, "Parola este prea scurtă!"),
+            minLength(8, "Parolă invalidă!"),
           ]}
           validateOn="input"
         >

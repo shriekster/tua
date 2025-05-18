@@ -6,15 +6,12 @@
   prefersdark: false;
   color-scheme: "light";
   --color-primary: oklch(58.96% 0.05 109.22);
-  --color-primary-faded: oklch(58.96% 0.05 109.22 / 0.267);
 }
 
 [data-theme="light"] {
   .btn-icon {
     background-color: transparent;
     border: none;
-  }
-  .btn-icon:hover {
-    background-color: var(--color-primary-faded);
+    transition: background-color;
   }
 }

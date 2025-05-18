@@ -1,3 +1,4 @@
+import type { Color } from "@/types/ui";
 import { sha256 } from "@oslojs/crypto/sha2";
 import { encodeHexLowerCase } from "@oslojs/encoding";
 
@@ -32,3 +33,5 @@ export const getSizeClassMap = (htmlElement: string) => ({
   lg: `${htmlElement}-lg`,
   xl: `${htmlElement}-xl`,
 });
+
+export const getStrokeColor = (color: Color) => `stroke-${color}`;

@@ -3,6 +3,7 @@ import type { Color, Size } from "@/types/ui";
 import clsx from "clsx";
 import { HiOutlineEye, HiOutlineEyeSlash } from "solid-icons/hi";
 import { createSignal, Match, Show, splitProps, Switch } from "solid-js";
+import IconButton from "./IconButton";
 
 type TextFieldProps = {
   type?: "email" | "number" | "password" | "tel" | "text" | "url";
@@ -87,13 +88,14 @@ const TextField = (props: TextFieldProps) => {
     clsx(
       "input",
       colorClass(),
-      sizeClass,
+      sizeClass(),
       local.fullWidth && "w-full",
       "p-[8px]",
       isPassword() && "pr-[40px]",
       local.class,
       "focus:outline-none"
     );
+  const iconColor = () => (local?.error ? "error" : local?.color ?? "primary");
 
   return (
     <div class={containerClass()}>
@@ -112,22 +114,22 @@ const TextField = (props: TextFieldProps) => {
           {...inputProps}
         />
         <Show when={showPasswordVisibilityButton()}>
-          <button
+          <IconButton
             tabIndex={-1}
-            type="button"
-            class="btn btn-circle btn-icon btn-md p-2 absolute right-0 z-10"
+            color={iconColor()}
+            class="p-2 absolute right-0 z-10"
             onMouseDown={onPasswordVisibilityMouseDown}
             onClick={onPasswordVisibilityButtonClick}
           >
             <Switch>
               <Match when={showPassword()}>
-                <HiOutlineEyeSlash color="#7f805d" size={20} />
+                <HiOutlineEyeSlash size={20} />
               </Match>
               <Match when={!showPassword()}>
-                <HiOutlineEye color="#7f805d" size={20} />
+                <HiOutlineEye size={20} />
               </Match>
             </Switch>
-          </button>
+          </IconButton>
         </Show>
       </label>
       <Show when={!!local.error}>

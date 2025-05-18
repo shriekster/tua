@@ -1,18 +1,10 @@
 import type { LoginData } from "@/types/ui";
+import { z } from "zod";
+import { http } from "./http";
 
-export const login = async (credentials: LoginData) => {
-  try {
-    const response = await fetch("/api/admin/sessions", {
-      headers: {
-        "Content-Type": "application/json",
-      },
-      method: "POST",
-      body: JSON.stringify(credentials),
-    });
-
-    return response.ok;
-  } catch (error) {
-    console.error("🚨", error);
-    return false;
-  }
-};
+export const login = async (credentials: LoginData) =>
+  http.post("/api/admin/sessions", credentials, {
+    schema: z.object({
+      message: z.string(),
+    }),
+  });

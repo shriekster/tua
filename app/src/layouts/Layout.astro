@@ -1,16 +1,18 @@
 ---
-import "../styles/global.css"
-import "../styles/app.css"
+import { PUBLIC_APP_URL } from "astro:env/client";
 import { ClientRouter } from "astro:transitions";
+import "../styles/app.css";
+import "../styles/global.css";
 ---
 
 <!doctype html>
-<html lang="ro">
+<html lang="ro" data-theme="light">
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
+		<meta name="description" content="Antrenează-te gratuit pentru traseul utilitar-aplicativ, în fiecare weekend, alături de voluntarii din Asociația Spirit Tânăr." />
 		<link rel="icon" type="image/x-icon" href="/favicon.ico" />
-		<meta name="generator" content={Astro.generator} />
+		<link rel="canonical" href={PUBLIC_APP_URL} />
 		<title>Asociația Spirit Tânăr | Traseul utilitar-aplicativ</title>
 		<ClientRouter />
 	</head>
@@ -18,12 +20,3 @@ import { ClientRouter } from "astro:transitions";
 		<slot />
 	</body>
 </html>
-
-<style>
-	html,
-	body {
-		margin: 0;
-		width: 100%;
-		height: 100%;
-	}
-</style>

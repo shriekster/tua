@@ -4,6 +4,6 @@ import Layout from "@/layouts/Layout.astro";
 ---
 <Layout>
   <main class="h-[100dvh] content-center relative">
-    <LoginForm client:load />
+    <LoginForm client:only="solid-js" />
   </main>
 </Layout>

@@ -66,7 +66,7 @@ export default defineConfig({
         access: "secret",
         default: "development",
       }),
-      APP_URL: envField.string({
+      PUBLIC_APP_URL: envField.string({
         context: "client",
         access: "public",
         optional: false,
@@ -76,5 +76,8 @@ export default defineConfig({
   },
   vite: {
     plugins: [tailwindcss()],
+  },
+  devToolbar: {
+    enabled: false,
   },
 });

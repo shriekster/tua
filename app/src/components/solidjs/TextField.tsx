@@ -1,29 +1,13 @@
+import { getColorClassMap, getSizeClassMap } from "@/lib/utils";
+import type { Color, Size } from "@/types/ui";
 import clsx from "clsx";
 import { HiOutlineEye, HiOutlineEyeSlash } from "solid-icons/hi";
-import {
-  createEffect,
-  createMemo,
-  createSignal,
-  Match,
-  Show,
-  splitProps,
-  Switch,
-} from "solid-js";
-
-const baseInputClass = "input";
+import { createSignal, Match, Show, splitProps, Switch } from "solid-js";
 
 type TextFieldProps = {
   type?: "email" | "number" | "password" | "tel" | "text" | "url";
-  size?: "xs" | "sm" | "md" | "lg" | "xl";
-  color?:
-    | "neutral"
-    | "primary"
-    | "secondary"
-    | "accent"
-    | "info"
-    | "success"
-    | "warning"
-    | "error";
+  size?: Size;
+  color?: Color;
   disabled?: boolean;
   fullWidth?: boolean;
   class?: string;
@@ -35,7 +19,14 @@ type TextFieldProps = {
   name: string;
 };
 
+const colorClassMap = getColorClassMap("input");
+const sizeClassMap = getSizeClassMap("input");
+
 const TextField = (props: TextFieldProps) => {
+  const [showPassword, setShowPassword] = createSignal(false);
+  const [showPasswordVisibilityButton, setShowPasswordVisibilityButton] =
+    createSignal(false);
+
   const [local, inputProps] = splitProps(props, [
     "type",
     "size",
@@ -50,9 +41,8 @@ const TextField = (props: TextFieldProps) => {
     "name",
   ]);
 
-  const [showPassword, setShowPassword] = createSignal(false);
-  const [showPasswordVisibilityButton, setShowPasswordVisibilityButton] =
-    createSignal(false);
+  const isPassword = () => local?.type === "password";
+  const isFullWidth = () => local?.fullWidth;
 
   const onPasswordVisibilityMouseDown = (e: MouseEvent) => {
     e.preventDefault();
@@ -62,65 +52,52 @@ const TextField = (props: TextFieldProps) => {
     setShowPassword((prevShowPassword) => !prevShowPassword);
   };
 
-  const onBlur =
-    local.type === "password"
-      ? () => {
-          setShowPasswordVisibilityButton(false);
-          setShowPassword(false);
-        }
-      : undefined;
-
-  const onFocus =
-    local.type === "password"
-      ? () => {
-          setShowPasswordVisibilityButton(true);
-        }
-      : undefined;
-
-  const type = createMemo(() => {
-    if (local.type === "password") {
-      return showPassword() ? "text" : "password";
+  const onBlur = () => {
+    if (isPassword()) {
+      setShowPasswordVisibilityButton(false);
+      setShowPassword(false);
     }
+  };
 
-    return local.type ?? "text";
-  });
+  const onFocus = () => {
+    if (isPassword()) {
+      setShowPasswordVisibilityButton(true);
+    }
+  };
 
-  const sizeClass = baseInputClass + "-" + local.size;
-  const colorClass = createMemo(
-    () =>
-      baseInputClass +
-      "-" +
-      (local?.error ? "error" : local?.color ?? "primary")
-  );
-  const fullWidthClass = local.fullWidth ? "w-full" : "";
-  const containerClass = clsx("relative", local?.fullWidth && "w-full");
-  const labelClass = clsx(
-    "relative",
-    "flex",
-    "items-center",
-    "pb-[24px]",
-    local?.fullWidth && "w-full"
-  );
-  const inputClass = createMemo(() =>
+  const type = () =>
+    isPassword()
+      ? showPassword()
+        ? "text"
+        : "password"
+      : local.type ?? "text";
+  const sizeClass = () => sizeClassMap[local?.size ?? "md"];
+  const colorClass = () =>
+    local.error ? "input-error" : colorClassMap[local?.color ?? "primary"];
+  const containerClass = () => clsx("relative", isFullWidth() && "w-full");
+  const labelClass = () =>
     clsx(
-      baseInputClass,
-      sizeClass,
+      "relative",
+      "flex",
+      "items-center",
+      "pb-[24px]",
+      isFullWidth() && "w-full"
+    );
+  const inputClass = () =>
+    clsx(
+      "input",
       colorClass(),
-      fullWidthClass,
+      sizeClass,
+      local.fullWidth && "w-full",
       "p-[8px]",
-      local.type === "password" && "pr-[40px]",
+      isPassword() && "pr-[40px]",
       local.class,
       "focus:outline-none"
-    )
-  );
-
-  createEffect(() =>
-    console.log({ colorClass: colorClass(), inputClass: inputClass() })
-  );
+    );
 
   return (
-    <div class={containerClass}>
-      <label class={labelClass} for={local.name}>
+    <div class={containerClass()}>
+      <label class={labelClass()} for={local.name}>
         <input
           name={local.name}
           placeholder={local.placeholder}
@@ -138,7 +115,7 @@ const TextField = (props: TextFieldProps) => {
           <button
             tabIndex={-1}
             type="button"
-            class="rounded-full bg-transparent p-2 hover:bg-[#7f805d44] hover:bg-opacity-15 absolute right-0 z-10"
+            class="btn btn-circle btn-icon btn-md p-2 absolute right-0 z-10"
             onMouseDown={onPasswordVisibilityMouseDown}
             onClick={onPasswordVisibilityButtonClick}
           >

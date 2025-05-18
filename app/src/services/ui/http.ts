@@ -1,6 +1,6 @@
 import { createHttpClient } from "@/lib/httpClient";
-import { APP_URL } from "astro:env/client";
+import { PUBLIC_APP_URL } from "astro:env/client";
 
 export const http = createHttpClient({
-  baseUrl: APP_URL,
+  baseUrl: PUBLIC_APP_URL,
 });

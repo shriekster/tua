@@ -1,3 +1,7 @@
 {
-  "login": "Login"
+  "loginForm": {
+    "user": "Utilizator",
+    "password": "Parolă",
+    "submit": "Login"
+  }
 }

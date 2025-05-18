@@ -64,7 +64,7 @@ export default function LoginForm() {
             <TextField
               {...props}
               fullWidth
-              placeholder="Utilizator"
+              placeholder={content("loginForm.user")}
               autocomplete="username"
               value={field.value}
               error={field.error}
@@ -85,7 +85,7 @@ export default function LoginForm() {
               {...props}
               fullWidth
               type="password"
-              placeholder="Parolă"
+              placeholder={content("loginForm.password")}
               autocomplete="current-password"
               value={field.value}
               error={field.error}
@@ -93,7 +93,7 @@ export default function LoginForm() {
             />
           )}
         </Field>
-        <Button type="submit" fullWidth label={content("login")} />
+        <Button type="submit" fullWidth label={content("loginForm.submit")} />
       </Form>
     </>
   );
